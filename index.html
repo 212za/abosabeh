@@ -55,10 +55,19 @@ footer{background:var(--ink);color:#fff;padding:20px;text-align:center}footer a{
 <script src="https://cdnjs.cloudflare.com/ajax/libs/firebase/10.12.2/firebase-auth-compat.min.js"></script>
 <script src="https://cdnjs.cloudflare.com/ajax/libs/firebase/10.12.2/firebase-firestore-compat.min.js"></script>
 <script>
-/* ===== 1. CONFIG: paste your Firebase web-app config and admin Gmail(s) ===== */
+/* ===== إعدادات الفايربيس وإيميل الأدمن (صلاح الدين) ===== */
 const CONFIG={
-  firebase:{apiKey:"YOUR_API_KEY",authDomain:"YOUR_PROJECT.firebaseapp.com",projectId:"YOUR_PROJECT_ID",appId:"YOUR_APP_ID"},
-  admins:["admin@gmail.com"]
+  firebase:{
+    apiKey: "AIzaSyBMpZ7CXOJbgKpMqOjzsbbCcpHBlslU3mw",
+    authDomain: "salah-52496.firebaseapp.com",
+    databaseURL: "https://salah-52496-default-rtdb.europe-west1.firebasedatabase.app",
+    projectId: "salah-52496",
+    storageBucket: "salah-52496.firebasestorage.app",
+    messagingSenderId: "235427387836",
+    appId: "1:235427387836:web:5ad91f888f013bb603f3b9",
+    measurementId: "G-MK9QC8X5QQ"
+  },
+  admins:["salaheldeen982@gmail.com"] // الإيميل الصحيح الخاص بك لصلاحيات الأدمن
 };
 /* ========================================================================== */
 firebase.initializeApp(CONFIG.firebase);
@@ -109,7 +118,7 @@ const need=a=>a.innerHTML=`<div class="empty">${t('needLogin')}<br><br><button c
 /* ---------- storefront ---------- */
 function shop(a){
   a.innerHTML=`<section class="hero"><h1>Abosabeh</h1><p>${t('tag')}</p></section>
-  <div class="grid">${products.map(p=>`<a class="card" href="#p/${p.id}"><img src="${esc((p.images||[])[0]||'')}" alt="${esc(p.name)}"><div class="b"><h3>${esc(p.name)}</h3><span class="price">${money(p.price)}</span></div></a>`).join('')||`<div class="empty">${t('empty')}</div>`}</div>`;
+  <div class="grid">${products.map(p=>`<a class="card" href="#p/${p.id}"><img src="${esc((p.images\vert{}\vert{}[])[0]\vert{}\vert{}'')}" alt="${esc(p.name)}"><div class="b"><h3>${esc(p.name)}</h3><span class="price">${money(p.price)}</span></div></a>`).join('')||`<div class="empty">${t('empty')}</div>`}</div>`;
 }
 function product(a,id){
   const p=products.find(x=>x.id===id);if(!p)return a.innerHTML=`<div class="empty">${t('empty')}</div>`;
@@ -139,7 +148,7 @@ function cartView(a){
 }
 async function placeOrder(){
   if(!user)return toast(t('needLogin'));
-  const ad=($('#ad')||{}).value||'',ph=$('#ph').value.trim();
+  const ad=($('#ad')\vert{}\vert{}{}).value\vert{}\vert{}'',ph=$('#ph').value.trim();
   if(!ph||(method==='delivery'&&!ad.trim()))return toast(t('needAddr'));
   const k=cartCalc(),items=k.items.map(c=>({name:c.p.name,price:c.p.price,q:c.q}));
   const o=await db.collection('orders').add({uid:user.uid,name:user.displayName,email:user.email,items,method,address:ad,phone:ph,subtotal:k.sub,fee:k.fee,total:k.total,status:'new',createdAt:TS()});
@@ -222,7 +231,7 @@ function adSettings(el){
 }
 async function saveSettings(){
   const social={};['whatsapp','facebook','instagram','tiktok','youtube'].forEach(k=>social[k]=$('#s_'+k).value.trim());
-  await db.doc('settings/store').set({deliveryFee:Number($('#sf').value)||0,payInfo:$('#sp').value,social},{merge:true});toast(t('saved'));
+  await db.doc('settings/store').set({deliveryFee:Number($('#sf').value)\vert{}\vert{}0,payInfo:$('#sp').value,social},{merge:true});toast(t('saved'));
 }
 head();route();
 </script></body></html>
