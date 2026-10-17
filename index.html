@@ -1,3 +1,120 @@
+// ===================== FILE: package.json =====================
+{
+  "name": "palomar-landing",
+  "private": true,
+  "version": "1.0.0",
+  "type": "module",
+  "scripts": { "dev": "vite", "build": "tsc && vite build", "preview": "vite preview" },
+  "dependencies": { "lucide-react": "^0.462.0", "react": "^18.3.1", "react-dom": "^18.3.1" },
+  "devDependencies": {
+    "@types/react": "^18.3.12", "@types/react-dom": "^18.3.1", "@vitejs/plugin-react": "^4.3.4",
+    "autoprefixer": "^10.4.20", "postcss": "^8.4.49", "tailwindcss": "^3.4.17",
+    "typescript": "^5.6.3", "vite": "^5.4.11"
+  }
+}
+
+// ===================== FILE: vite.config.ts =====================
+import { defineConfig } from 'vite';
+import react from '@vitejs/plugin-react';
+export default defineConfig({ plugins: [react()] });
+
+// ===================== FILE: tsconfig.json =====================
+{
+  "compilerOptions": {
+    "target": "ES2020", "useDefineForClassFields": true, "lib": ["ES2020", "DOM", "DOM.Iterable"],
+    "module": "ESNext", "skipLibCheck": true, "moduleResolution": "bundler",
+    "resolveJsonModule": true, "isolatedModules": true, "noEmit": true, "jsx": "react-jsx", "strict": true
+  },
+  "include": ["src"]
+}
+
+// ===================== FILE: postcss.config.js =====================
+export default { plugins: { tailwindcss: {}, autoprefixer: {} } };
+
+// ===================== FILE: tailwind.config.js =====================
+/** @type {import('tailwindcss').Config} */
+export default {
+  content: ['./index.html', './src/**/*.{ts,tsx}'],
+  theme: {
+    extend: {
+      colors: {
+        brand: { dark: '#2d3a2e', green: '#3d5a3e', light: '#f5f3ef', cream: '#faf8f5' },
+      },
+      fontFamily: {
+        'helvetica-neue': ['"Helvetica Neue Light"', 'Helvetica', 'Arial', 'sans-serif'],
+        playfair: ['"Playfair Display"', 'serif'],
+        oswald: ['"Oswald"', 'sans-serif'],
+        montserrat: ['"Montserrat"', 'sans-serif'],
+        'roboto-slab': ['"Roboto Slab"', 'serif'],
+        raleway: ['"Raleway"', 'sans-serif'],
+      },
+    },
+  },
+  plugins: [],
+};
+
+// ===================== FILE: index.html =====================
+<!doctype html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>Palomar - One Unified System for LLMs</title>
+    <link href="https://db.onlinewebfonts.com/c/0e6de1ec911a2e267ff136bbdd384a44?family=Helvetica+Neue+Light" rel="stylesheet">
+    <link href="https://fonts.googleapis.com/css2?family=Playfair+Display:wght@700&family=Oswald:wght@500&family=Montserrat:wght@700&family=Roboto+Slab:wght@600&family=Raleway:wght@700&display=swap" rel="stylesheet">
+  </head>
+  <body>
+    <div id="root"></div>
+    <script type="module" src="/src/main.tsx"></script>
+  </body>
+</html>
+
+// ===================== FILE: src/vite-env.d.ts =====================
+/// <reference types="vite/client" />
+
+// ===================== FILE: src/main.tsx =====================
+import React from 'react';
+import ReactDOM from 'react-dom/client';
+import App from './App';
+import './index.css';
+
+ReactDOM.createRoot(document.getElementById('root')!).render(
+  <React.StrictMode>
+    <App />
+  </React.StrictMode>
+);
+
+// ===================== FILE: src/index.css =====================
+@tailwind base;
+@tailwind components;
+@tailwind utilities;
+
+* { margin: 0; padding: 0; box-sizing: border-box; }
+html { scroll-behavior: smooth; }
+body {
+  font-family: 'Helvetica Neue Light', Helvetica, Arial, sans-serif;
+  -webkit-font-smoothing: antialiased;
+  -moz-osx-font-smoothing: grayscale;
+}
+
+@keyframes fade-up {
+  from { opacity: 0; transform: translateY(20px); }
+  to   { opacity: 1; transform: translateY(0); }
+}
+@keyframes fade-down {
+  from { opacity: 0; transform: translateY(-12px); }
+  to   { opacity: 1; transform: translateY(0); }
+}
+.animate-fade-up   { animation: fade-up 0.8s cubic-bezier(0.16, 1, 0.3, 1) both; }
+.animate-fade-down { animation: fade-down 0.7s cubic-bezier(0.16, 1, 0.3, 1) both; }
+.stagger-1 { animation-delay: 0ms; }
+.stagger-2 { animation-delay: 120ms; }
+.stagger-3 { animation-delay: 240ms; }
+.stagger-4 { animation-delay: 360ms; }
+.stagger-5 { animation-delay: 480ms; }
+.stagger-6 { animation-delay: 600ms; }
+
+// ===================== FILE: src/App.tsx =====================
 import { useEffect, useState } from 'react';
 import { ArrowRight, ChevronDown, Triangle } from 'lucide-react';
 
