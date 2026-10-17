@@ -17,12 +17,9 @@
         theme: {
           extend: {
             colors: {
-              brand: {
-                dark: '#1e293b',
-                green: '#0f766e',
-                cream: '#f8fafc',
-                accent: '#0d9488'
-              }
+              'brand-dark': '#2d3a2e',
+              'brand-green': '#3d5a3e',
+              'brand-cream': '#faf8f5',
             },
             fontFamily: {
               cairo: ['Cairo', 'sans-serif'],
@@ -68,25 +65,25 @@
       window.dbUpdate = update;
       window.dbRemove = remove;
       
-      // إطلاق حدث أن فايربيس جاهز
       window.dispatchEvent(new Event('firebase-ready'));
     </script>
 
     <style>
-      body { font-family: 'Cairo', sans-serif; background-color: #f8fafc; color: #1e293b; }
+      body { font-family: 'Cairo', sans-serif; background-color: #faf8f5; color: #2d3a2e; }
     </style>
   </head>
-  <body class="bg-slate-50 min-h-screen">
+  <body class="bg-[#faf8f5] min-h-screen">
     <div id="root"></div>
 
     <script type="text/babel">
       const { useState, useEffect } = React;
 
-      // ترجمة بسيطة للواجهة
       const translations = {
         ar: {
           brand: "أبو صبيح",
-          subtitle: "متجر المعدات والأجهزة المتكامل",
+          solutions: "المعدات",
+          plans: "المبيعات",
+          news: "خدمة العملاء",
           login: "تسجيل الدخول بـ Google",
           logout: "خروج",
           adminPanel: "لوحة الأدمن",
@@ -94,7 +91,7 @@
           delivery: "توصيل للمنزل",
           price: "السعر",
           deliveryFee: "رسوم التوصيل",
-          buyNow: "شراء / طلب المنتج",
+          buyNow: "عرض التفاصيل والطلب",
           chatWithAdmin: "محادثة الأدمن",
           statusAvailable: "متوفر",
           statusSold: "تم البيع",
@@ -113,7 +110,9 @@
         },
         en: {
           brand: "ABOSABEH",
-          subtitle: "Unified Equipment & Machinery Store",
+          solutions: "Equipment",
+          plans: "Sales",
+          news: "Customer Service",
           login: "Sign in with Google",
           logout: "Logout",
           adminPanel: "Admin Panel",
@@ -121,7 +120,7 @@
           delivery: "Home Delivery",
           price: "Price",
           deliveryFee: "Delivery Fee",
-          buyNow: "Buy / Order Product",
+          buyNow: "View Details & Order",
           chatWithAdmin: "Chat with Admin",
           statusAvailable: "Available",
           statusSold: "Sold Out",
@@ -146,20 +145,14 @@
         const [isAdmin, setIsAdmin] = useState(false);
         const [currentView, setCurrentView] = useState('shop'); // shop, admin, chat
         
-        // البيانات القادمة من Firebase
         const [products, setProducts] = useState({});
         const [settings, setSettings] = useState({ deliveryFee: 50, whatsapp: '', facebook: '' });
-        const [chats, setChats] = useState({});
         const [orders, setOrders] = useState({});
         
-        // تفاصيل المنتج المحدد للشراء أو العرض
         const [selectedProduct, setSelectedProduct] = useState(null);
         const [activeImageIndex, setActiveImageIndex] = useState(0);
-        const [orderType, setOrderType] = useState('pickup'); // pickup or delivery
-        const [chatMessages, setChatMessages] = useState([]);
-        const [newMessage, setNewMessage] = useState('');
+        const [orderType, setOrderType] = useState('pickup');
 
-        // حسابات الأدمن المسموحة (يمكنك تعديل إيميلك هنا ليصبح أدمن تلقائياً)
         const adminEmails = ["salah@gmail.com", "abosabeh@gmail.com"];
 
         useEffect(() => {
@@ -178,17 +171,14 @@
                 }
               });
 
-              // جلب المنتجات
               window.dbOnValue(window.dbRef(window.db, 'products'), (snapshot) => {
                 setProducts(snapshot.val() || {});
               });
 
-              // جلب الإعدادات (سعر التوصيل وروابط التواصل)
               window.dbOnValue(window.dbRef(window.db, 'settings'), (snapshot) => {
                 setSettings(snapshot.val() || { deliveryFee: 50, whatsapp: '', facebook: '' });
               });
 
-              // جلب الطلبات
               window.dbOnValue(window.dbRef(window.db, 'orders'), (snapshot) => {
                 setOrders(snapshot.val() || {});
               });
@@ -211,84 +201,148 @@
           setCurrentView('shop');
         };
 
+        const scrollToSales = () => {
+          setCurrentView('shop');
+          const element = document.getElementById('sales-section');
+          if (element) {
+            element.scrollIntoView({ behavior: 'smooth' });
+          }
+        };
+
         const t = translations[lang];
 
         return (
-          <div className="min-h-screen bg-slate-50" dir={lang === 'ar' ? 'rtl' : 'ltr'}>
-            {/* شريط التنقل العلوي */}
-            <header className="bg-white shadow-sm sticky top-0 z-50">
-              <div className="max-w-7xl mx-auto px-4 py-4 flex items-center justify-between">
-                <div className="flex items-center gap-3 cursor-pointer" onClick={() => setCurrentView('shop')}>
-                  <div className="bg-teal-700 text-white p-2 rounded-xl font-bold text-xl">أ.ص</div>
-                  <div>
-                    <h1 className="text-xl font-bold text-slate-800">{t.brand}</h1>
-                    <p className="text-xs text-slate-500">{t.subtitle}</p>
-                  </div>
-                </div>
-
-                <div className="flex items-center gap-4">
-                  {/* تغيير اللغة */}
-                  <button 
-                    onClick={() => {
-                      const newLang = lang === 'ar' ? 'en' : 'ar';
-                      setLang(newLang);
-                      document.getElementById('html-root').setAttribute('dir', newLang === 'ar' ? 'rtl' : 'ltr');
-                    }}
-                    className="px-3 py-1.5 text-sm bg-slate-100 hover:bg-slate-200 rounded-lg font-semibold"
-                  >
-                    {lang === 'ar' ? 'English' : 'العربية'}
-                  </button>
-
-                  {/* روابط السوشيال المتاحة من الأدمن */}
-                  {settings.whatsapp && (
-                    <a href={settings.whatsapp} target="_blank" className="text-green-600 font-bold hover:underline text-sm hidden sm:inline">WhatsApp</a>
-                  )}
-                  {settings.facebook && (
-                    <a href={settings.facebook} target="_blank" className="text-blue-600 font-bold hover:underline text-sm hidden sm:inline">Facebook</a>
-                  )}
-
-                  {user ? (
-                    <div className="flex items-center gap-3">
-                      <span className="text-sm font-medium hidden md:inline">{user.displayName}</span>
-                      {isAdmin && (
-                        <button 
-                          onClick={() => setCurrentView(currentView === 'admin' ? 'shop' : 'admin')}
-                          className="bg-teal-700 text-white px-3 py-1.5 rounded-lg text-sm font-semibold hover:bg-teal-800"
-                        >
-                          {currentView === 'admin' ? t.products : t.adminPanel}
-                        </button>
-                      )}
-                      <button 
-                        onClick={() => setCurrentView('chat')}
-                        className="bg-amber-600 text-white px-3 py-1.5 rounded-lg text-sm font-semibold hover:bg-amber-700"
-                      >
-                        {t.chatWithAdmin}
-                      </button>
-                      <button onClick={logout} className="text-red-500 hover:text-red-700 text-sm font-medium">
-                        {t.logout}
-                      </button>
-                    </div>
-                  ) : (
-                    <button 
-                      onClick={loginWithGoogle}
-                      className="bg-slate-900 text-white px-4 py-2 rounded-xl text-sm font-semibold hover:bg-slate-800 flex items-center gap-2"
+          <div className="min-h-screen bg-[#faf8f5] text-[#2d3a2e]" dir={lang === 'ar' ? 'rtl' : 'ltr'}>
+            {/* شريط التنقل العلوي بطراز بوليمر */}
+            <header className="fixed top-0 left-0 right-0 z-50 bg-[#faf8f5]/90 backdrop-blur-md shadow-sm">
+              <div className="max-w-7xl mx-auto px-6 lg:px-8">
+                <div className="relative flex items-center h-16 md:h-20 justify-between">
+                  
+                  {/* الروابط اليسرى/اليمنى حسب اللغة */}
+                  <nav className="hidden md:flex items-center gap-8">
+                    <button
+                      onClick={() => setCurrentView('shop')}
+                      className="text-sm text-[#2d3a2e] tracking-wide uppercase hover:opacity-70 transition-opacity font-bold cursor-pointer"
                     >
-                      {t.login}
+                      {t.solutions}
                     </button>
-                  )}
+                    <button
+                      onClick={scrollToSales}
+                      className="text-sm text-[#2d3a2e] tracking-wide uppercase hover:opacity-70 transition-opacity font-bold cursor-pointer"
+                    >
+                      {t.plans}
+                    </button>
+                    <button
+                      onClick={() => user ? setCurrentView('chat') : alert('يرجى تسجيل الدخول أولاً')}
+                      className="text-sm text-[#2d3a2e] tracking-wide uppercase hover:opacity-70 transition-opacity font-bold cursor-pointer"
+                    >
+                      {t.news}
+                    </button>
+                  </nav>
+
+                  {/* الشعار في المنتصف */}
+                  <div 
+                    onClick={() => setCurrentView('shop')}
+                    className="absolute left-1/2 -translate-x-1/2 flex items-center gap-2 select-none cursor-pointer"
+                  >
+                    <span className="text-xl text-[#2d3a2e] font-bold">&#9650;</span>
+                    <span className="text-xl text-[#2d3a2e] tracking-tight font-medium">
+                      {t.brand}
+                    </span>
+                  </div>
+
+                  {/* أزرار التحكم واليوزر */}
+                  <div className="flex items-center gap-3">
+                    <button 
+                      onClick={() => {
+                        const newLang = lang === 'ar' ? 'en' : 'ar';
+                        setLang(newLang);
+                        document.getElementById('html-root').setAttribute('dir', newLang === 'ar' ? 'rtl' : 'ltr');
+                      }}
+                      className="px-3 py-1.5 text-xs bg-white border border-[#2d3a2e]/20 hover:bg-slate-100 rounded-full font-bold"
+                    >
+                      {lang === 'ar' ? 'English' : 'العربية'}
+                    </button>
+
+                    {settings.whatsapp && (
+                      <a href={settings.whatsapp} target="_blank" className="text-green-700 font-bold text-xs hidden sm:inline">WhatsApp</a>
+                    )}
+                    {settings.facebook && (
+                      <a href={settings.facebook} target="_blank" className="text-blue-700 font-bold text-xs hidden sm:inline">Facebook</a>
+                    )}
+
+                    {user ? (
+                      <div className="flex items-center gap-2">
+                        {isAdmin && (
+                          <button 
+                            onClick={() => setCurrentView(currentView === 'admin' ? 'shop' : 'admin')}
+                            className="bg-[#2d3a2e] text-white px-3 py-1.5 rounded-full text-xs font-bold hover:bg-[#3d5a3e]"
+                          >
+                            {currentView === 'admin' ? t.solutions : t.adminPanel}
+                          </button>
+                        )}
+                        <button 
+                          onClick={() => setCurrentView('chat')}
+                          className="bg-amber-700 text-white px-3 py-1.5 rounded-full text-xs font-bold"
+                        >
+                          {t.chatWithAdmin}
+                        </button>
+                        <button onClick={logout} className="text-red-600 text-xs font-bold">
+                          {t.logout}
+                        </button>
+                      </div>
+                    ) : (
+                      <button 
+                        onClick={loginWithGoogle}
+                        className="bg-[#2d3a2e] text-white px-4 py-2 rounded-full text-xs font-semibold hover:bg-[#3d5a3e]"
+                      >
+                        {t.login}
+                      </button>
+                    )}
+                  </div>
+
                 </div>
               </div>
             </header>
 
             {/* المحتوى الرئيسي */}
-            <main className="max-w-7xl mx-auto px-4 py-8">
+            <main className="pt-24 pb-12 max-w-7xl mx-auto px-6 lg:px-8">
               {currentView === 'shop' && (
-                <ShopView 
-                  products={products} 
-                  settings={settings} 
-                  lang={lang} 
-                  onSelectProduct={(p) => { setSelectedProduct(p); setActiveImageIndex(0); }} 
-                />
+                <div>
+                  {/* واجهة الهيرو الترحيبية */}
+                  <section className="relative w-full py-16 text-center md:text-start flex flex-col items-center md:items-start justify-center">
+                    <div className="inline-flex items-center gap-2 px-4 py-2 rounded-full border border-[#2d3a2e]/15 bg-white/60 backdrop-blur-sm mb-6">
+                      <span className="text-xs font-bold text-[#2d3a2e]">
+                        {lang === 'ar' ? 'مرحباً بك في منصة أبو صبيح للمعدات والأجهزة المتكاملة' : 'Welcome to Abosabeh Equipment Store'}
+                      </span>
+                    </div>
+                    <h1 className="text-3xl sm:text-4xl md:text-5xl text-[#2d3a2e] leading-tight font-bold max-w-3xl mb-8">
+                      {lang === 'ar' ? 'المتجر الأول لبيع المعدات والأجهزة مع خدمة التوصيل والشات المباشر' : 'The ultimate store for equipment with delivery & direct chat'}
+                    </h1>
+                    
+                    {/* زر الانتقال السريع للمبيعات */}
+                    <button
+                      onClick={scrollToSales}
+                      className="inline-flex items-center gap-2 px-6 py-3 bg-[#2d3a2e] text-white text-sm font-bold rounded-full hover:bg-[#3d5a3e] transition-colors shadow-sm"
+                    >
+                      {lang === 'ar' ? 'انتقل إلى المبيعات والمعروضات 👇' : 'Go to Sales & Equipment 👇'}
+                    </button>
+                  </section>
+
+                  {/* قسم عرض المنتجات والمبيعات */}
+                  <div id="sales-section" className="mt-12 pt-8 border-t border-[#2d3a2e]/10">
+                    <h2 className="text-2xl font-bold text-[#2d3a2e] mb-6">
+                      {lang === 'ar' ? 'المعدات والمعروضات المتاحة للبيع' : 'Available Equipment & Sales'}
+                    </h2>
+                    
+                    <ShopView 
+                      products={products} 
+                      settings={settings} 
+                      lang={lang} 
+                      onSelectProduct={(p) => { setSelectedProduct(p); setActiveImageIndex(0); }} 
+                    />
+                  </div>
+                </div>
               )}
 
               {currentView === 'admin' && isAdmin && (
@@ -300,7 +354,7 @@
               )}
             </main>
 
-            {/* نافذة تفاصيل المنتج والشراء */}
+            {/* نافذة تفاصيل المنتج */}
             {selectedProduct && (
               <ProductModal 
                 product={selectedProduct} 
@@ -322,25 +376,15 @@
         );
       }
 
-      // واجهة المتجر الرئيسية للعملاء
       function ShopView({ products, settings, lang, onSelectProduct }) {
         const productList = Object.keys(products).map(key => ({ id: key, ...products[key] }));
 
         return (
           <div>
-            <div className="mb-8 text-center md:text-start">
-              <h2 className="text-3xl font-bold text-slate-800 mb-2">
-                {lang === 'ar' ? 'المعدات والأجهزة المتاحة' : 'Available Equipment'}
-              </h2>
-              <p className="text-slate-500">
-                {lang === 'ar' ? 'اختر معدتك واطلبها بسهولة مع خدمة التوصيل أو الاستلام من المتجر' : 'Browse our equipment and order easily with pickup or delivery'}
-              </p>
-            </div>
-
             {productList.length === 0 ? (
-              <div className="text-center py-16 bg-white rounded-2xl shadow-sm border border-slate-100">
-                <p className="text-slate-400 text-lg">
-                  {lang === 'ar' ? 'لا توجد معدات معروضة حالياً. تابعنا قريباً!' : 'No equipment available right now.'}
+              <div className="text-center py-16 bg-white/50 rounded-2xl border border-[#2d3a2e]/10">
+                <p className="text-[#2d3a2e]/60 text-base font-semibold">
+                  {lang === 'ar' ? 'لا توجد معدات معروضة حالياً.' : 'No equipment available right now.'}
                 </p>
               </div>
             ) : (
@@ -350,35 +394,35 @@
                   const isSold = item.status === 'sold';
                   
                   return (
-                    <div key={item.id} className="bg-white rounded-2xl shadow-sm border border-slate-100 overflow-hidden flex flex-col justify-between hover:shadow-md transition-shadow">
+                    <div key={item.id} className="bg-white rounded-2xl shadow-sm border border-[#2d3a2e]/10 overflow-hidden flex flex-col justify-between">
                       <div>
-                        <div className="relative h-56 bg-slate-100 overflow-hidden">
+                        <div className="relative h-52 bg-slate-100 overflow-hidden">
                           <img src={images[0]} alt={item.name} className="w-full h-full object-cover" />
                           {isSold ? (
-                            <span className="absolute top-3 right-3 bg-red-500 text-white text-xs px-3 py-1 rounded-full font-bold">
+                            <span className="absolute top-3 right-3 bg-red-600 text-white text-xs px-3 py-1 rounded-full font-bold">
                               {lang === 'ar' ? 'تم البيع' : 'Sold Out'}
                             </span>
                           ) : (
-                            <span className="absolute top-3 right-3 bg-teal-600 text-white text-xs px-3 py-1 rounded-full font-bold">
+                            <span className="absolute top-3 right-3 bg-[#3d5a3e] text-white text-xs px-3 py-1 rounded-full font-bold">
                               {lang === 'ar' ? 'متوفر' : 'Available'}
                             </span>
                           )}
                         </div>
-                        <div className="p-5">
-                          <h3 className="text-lg font-bold text-slate-800 mb-1">{item.name}</h3>
+                        <div className="p-4">
+                          <h3 className="text-lg font-bold text-[#2d3a2e] mb-1">{item.name}</h3>
                           {item.description && (
-                            <p className="text-slate-500 text-sm line-clamp-2 mb-3">{item.description}</p>
+                            <p className="text-[#2d3a2e]/70 text-xs line-clamp-2 mb-3">{item.description}</p>
                           )}
-                          <div className="text-xl font-bold text-teal-700">
+                          <div className="text-xl font-bold text-[#3d5a3e]">
                             {item.price} ج.م
                           </div>
                         </div>
                       </div>
 
-                      <div className="p-5 pt-0">
+                      <div className="p-4 pt-0">
                         <button
                           onClick={() => onSelectProduct(item)}
-                          className="w-full bg-slate-900 text-white py-2.5 rounded-xl text-sm font-semibold hover:bg-slate-800 transition-colors"
+                          className="w-full bg-[#2d3a2e] text-white py-2.5 rounded-xl text-xs font-bold hover:bg-[#3d5a3e] transition-colors"
                         >
                           {lang === 'ar' ? 'عرض التفاصيل والطلب' : 'View Details & Order'}
                         </button>
@@ -392,34 +436,24 @@
         );
       }
 
-      // نافذة تفاصيل المنتج
       function ProductModal({ product, settings, lang, activeImageIndex, setActiveImageIndex, orderType, setOrderType, onClose, user, onOpenChat }) {
         const images = product.images || [product.image || 'https://via.placeholder.com/400'];
         const deliveryFee = Number(settings.deliveryFee || 50);
         const totalPrice = orderType === 'delivery' ? Number(product.price) + deliveryFee : Number(product.price);
 
         return (
-          <div className="fixed inset-0 bg-black/60 z-50 flex items-center justify-center p-4 backdrop-blur-sm">
-            <div className="bg-white rounded-3xl max-w-2xl w-full max-h-[90vh] overflow-y-auto p-6 relative">
-              <button 
-                onClick={onClose}
-                className="absolute top-4 left-4 bg-slate-100 hover:bg-slate-200 w-9 h-9 rounded-full flex items-center justify-center font-bold text-slate-600"
-              >
-                ✕
-              </button>
+          <div className="fixed inset-0 bg-black/50 z-50 flex items-center justify-center p-4 backdrop-blur-sm">
+            <div className="bg-white rounded-3xl max-w-xl w-full max-h-[90vh] overflow-y-auto p-6 relative">
+              <button onClick={onClose} className="absolute top-4 left-4 bg-slate-100 w-8 h-8 rounded-full font-bold text-slate-700">✕</button>
 
               <div className="mb-4">
-                <div className="h-72 bg-slate-100 rounded-2xl overflow-hidden mb-3">
-                  <img src={images[activeImageIndex]} alt={product.name} className="w-full h-full object-cover" />
+                <div className="h-64 bg-slate-100 rounded-2xl overflow-hidden mb-2">
+                  <img src={images[activeImageIndex]} alt="" className="w-full h-full object-cover" />
                 </div>
                 {images.length > 1 && (
-                  <div className="flex gap-2 overflow-x-auto pb-2">
+                  <div className="flex gap-2">
                     {images.map((img, idx) => (
-                      <button 
-                        key={idx}
-                        onClick={() => setActiveImageIndex(idx)}
-                        className={`w-16 h-16 rounded-xl overflow-hidden border-2 flex-shrink-0 ${activeImageIndex === idx ? 'border-teal-600' : 'border-transparent'}`}
-                      >
+                      <button key={idx} onClick={() => setActiveImageIndex(idx)} className={`w-14 h-14 rounded-lg overflow-hidden border-2 ${activeImageIndex === idx ? 'border-[#3d5a3e]' : 'border-transparent'}`}>
                         <img src={img} alt="" className="w-full h-full object-cover" />
                       </button>
                     ))}
@@ -427,63 +461,38 @@
                 )}
               </div>
 
-              <h2 className="text-2xl font-bold text-slate-800 mb-2">{product.name}</h2>
-              {product.description && (
-                <p className="text-slate-600 text-sm mb-4 leading-relaxed">{product.description}</p>
-              )}
+              <h2 className="text-2xl font-bold text-[#2d3a2e] mb-2">{product.name}</h2>
+              {product.description && <p className="text-slate-600 text-sm mb-4">{product.description}</p>}
 
               <div className="bg-slate-50 p-4 rounded-2xl mb-6">
-                <label className="block text-sm font-bold text-slate-700 mb-2">
-                  {lang === 'ar' ? 'طريقة الاستلام والتوصيل:' : 'Fulfillment Method:'}
-                </label>
+                <label className="block text-xs font-bold text-slate-700 mb-2">طريقة الاستلام أو التوصيل:</label>
                 <div className="grid grid-cols-2 gap-3">
-                  <button
-                    type="button"
-                    onClick={() => setOrderType('pickup')}
-                    className={`p-3 rounded-xl border text-sm font-semibold transition-all ${orderType === 'pickup' ? 'border-teal-600 bg-teal-50 text-teal-800' : 'border-slate-200 bg-white text-slate-600'}`}
-                  >
-                    <div>{lang === 'ar' ? 'استلام من المتجر' : 'Store Pickup'}</div>
-                    <div className="text-xs opacity-75 mt-1">{product.price} ج.م</div>
+                  <button onClick={() => setOrderType('pickup')} className={`p-3 rounded-xl border text-xs font-bold ${orderType === 'pickup' ? 'border-[#3d5a3e] bg-[#3d5a3e]/10 text-[#2d3a2e]' : 'border-slate-200'}`}>
+                    استلام من المتجر ({product.price} ج.م)
                   </button>
-                  <button
-                    type="button"
-                    onClick={() => setOrderType('delivery')}
-                    className={`p-3 rounded-xl border text-sm font-semibold transition-all ${orderType === 'delivery' ? 'border-teal-600 bg-teal-50 text-teal-800' : 'border-slate-200 bg-white text-slate-600'}`}
-                  >
-                    <div>{lang === 'ar' ? 'توصيل للمنزل' : 'Home Delivery'}</div>
-                    <div className="text-xs opacity-75 mt-1">{product.price} + {deliveryFee} توصيل</div>
+                  <button onClick={() => setOrderType('delivery')} className={`p-3 rounded-xl border text-xs font-bold ${orderType === 'delivery' ? 'border-[#3d5a3e] bg-[#3d5a3e]/10 text-[#2d3a2e]' : 'border-slate-200'}`}>
+                    توصيل للمنزل (+{deliveryFee} ج.م)
                   </button>
                 </div>
               </div>
 
-              <div className="flex items-center justify-between mb-6 pt-4 border-t border-slate-100">
-                <div>
-                  <span className="text-xs text-slate-400 block">{lang === 'ar' ? 'الإجمالي المطلوب' : 'Total Amount'}</span>
-                  <span className="text-2xl font-bold text-teal-700">{totalPrice} ج.م</span>
-                </div>
-                <div className="text-xs text-slate-500 max-w-[220px] text-end">
-                  {lang === 'ar' ? 'يرجى تحويل المبلغ ثم إرسال سكرين شوت التحويل في الشات لتأكيد الطلب.' : 'Please transfer funds and send screenshot in chat.'}
-                </div>
+              <div className="flex justify-between items-center mb-6">
+                <span className="text-sm font-bold text-slate-600">الإجمالي النهائي:</span>
+                <span className="text-2xl font-bold text-[#3d5a3e]">{totalPrice} ج.م</span>
               </div>
 
               {user ? (
-                <button
-                  onClick={onOpenChat}
-                  className="w-full bg-teal-700 text-white py-3 rounded-xl font-bold hover:bg-teal-800 transition-colors shadow-sm"
-                >
-                  {lang === 'ar' ? 'انتقل للشات لإرسال إثبات الدفع وتأكيد الطلب' : 'Go to Chat to Send Payment Proof & Confirm'}
+                <button onClick={onOpenChat} className="w-full bg-[#2d3a2e] text-white py-3 rounded-xl font-bold text-sm hover:bg-[#3d5a3e]">
+                  {lang === 'ar' ? 'انتقل للشات لإرسال السكرين شوت وتأكيد الطلب' : 'Go to Chat to Send Screenshot & Confirm'}
                 </button>
               ) : (
-                <div className="text-center text-sm text-red-500 font-semibold bg-red-50 p-3 rounded-xl">
-                  {lang === 'ar' ? 'يرجى تسجيل الدخول أولاً لتتمكن من إتمام الطلب ومراسلة الأدمن.' : 'Please sign in first to complete your order and chat with admin.'}
-                </div>
+                <p className="text-center text-xs text-red-600 font-bold bg-red-50 p-3 rounded-xl">يرجى تسجيل الدخول أولاً لإتمام الطلب والمراسلة.</p>
               )}
             </div>
           </div>
         );
       }
 
-      // محادثة الشات المنفصل لكل مستخدم
       function ChatView({ user, lang }) {
         const [messages, setMessages] = useState([]);
         const [text, setText] = useState('');
@@ -492,77 +501,44 @@
           const chatRef = window.dbRef(window.db, `chats/${user.uid}`);
           window.dbOnValue(chatRef, (snapshot) => {
             const data = snapshot.val() || {};
-            const list = Object.keys(data).map(k => ({ id: k, ...data[k] }));
-            setMessages(list);
+            setMessages(Object.keys(data).map(k => ({ id: k, ...data[k] })));
           });
         }, [user.uid]);
 
         const sendMessage = (e) => {
           e.preventDefault();
           if (!text.trim()) return;
-
-          const chatRef = window.dbRef(window.db, `chats/${user.uid}`);
-          window.dbPush(chatRef, {
+          window.dbPush(window.dbRef(window.db, `chats/${user.uid}`), {
             sender: user.uid,
             senderName: user.displayName || 'عميل',
-            text: text,
+            text,
             timestamp: Date.now()
           });
           setText('');
         };
 
         return (
-          <div className="bg-white rounded-3xl shadow-sm border border-slate-100 max-w-4xl mx-auto flex flex-col h-[75vh]">
-            <div className="p-4 border-b border-slate-100 bg-slate-50 rounded-t-3xl flex items-center justify-between">
-              <h3 className="font-bold text-slate-800">
-                {lang === 'ar' ? 'محادثتك الخاصة مع إدارة أبو صبيح' : 'Your Private Chat with Abosabeh Admin'}
-              </h3>
-              <span className="text-xs text-teal-700 bg-teal-50 px-3 py-1 rounded-full font-semibold">
-                {lang === 'ar' ? 'محادثة آمنة وخاصة' : 'Secure Private Chat'}
-              </span>
-            </div>
-
-            <div className="flex-1 overflow-y-auto p-4 space-y-4">
-              {messages.length === 0 ? (
-                <div className="text-center text-slate-400 py-12">
-                  {lang === 'ar' ? 'لا توجد رسائل بعد. أرسل استفسارك أو سكرين شوت الدفع هنا.' : 'No messages yet. Send your query or payment screenshot here.'}
+          <div className="bg-white rounded-3xl shadow-sm border border-slate-200 max-w-3xl mx-auto flex flex-col h-[70vh]">
+            <div className="p-4 border-b bg-slate-50 rounded-t-3xl font-bold text-sm">محادثتك الخاصة مع إدارة أبو صبيح</div>
+            <div className="flex-1 overflow-y-auto p-4 space-y-3">
+              {messages.map(m => (
+                <div key={m.id} className={`flex flex-col ${m.sender === user.uid ? 'items-end' : 'items-start'}`}>
+                  <div className={`p-3 rounded-2xl text-xs max-w-[80%] ${m.sender === user.uid ? 'bg-[#2d3a2e] text-white' : 'bg-slate-100 text-slate-800'}`}>
+                    {m.text}
+                  </div>
                 </div>
-              ) : (
-                messages.map(msg => {
-                  const isMe = msg.sender === user.uid;
-                  return (
-                    <div key={msg.id} className={`flex flex-col ${isMe ? 'items-end' : 'items-start'}`}>
-                      <div className={`max-w-[80%] p-3.5 rounded-2xl text-sm ${isMe ? 'bg-teal-700 text-white rounded-br-none' : 'bg-slate-100 text-slate-800 rounded-bl-none'}`}>
-                        {msg.text}
-                      </div>
-                      <span className="text-[10px] text-slate-400 mt-1 px-1">
-                        {new Date(msg.timestamp).toLocaleTimeString([], { hour: '2-digit', minute: '2-digit' })}
-                      </span>
-                    </div>
-                  );
-                })
-              )}
+              ))}
             </div>
-
-            <form onSubmit={sendMessage} className="p-4 border-t border-slate-100 flex gap-2">
-              <input
-                type="text"
-                value={text}
-                onChange={(e) => setText(e.target.value)}
-                placeholder={lang === 'ar' ? 'اكتب رسلتك أو ارفق رابط السكرين شوت هنا...' : 'Type message or screenshot link...'}
-                className="flex-1 px-4 py-3 border border-slate-200 rounded-xl text-sm focus:outline-none focus:border-teal-600"
-              />
-              <button type="submit" className="bg-teal-700 text-white px-6 py-3 rounded-xl font-bold text-sm hover:bg-teal-800 transition-colors">
-                {lang === 'ar' ? 'إرسال' : 'Send'}
-              </button>
+            <form onSubmit={sendMessage} className="p-3 border-t flex gap-2">
+              <input type="text" value={text} onChange={e=>setText(e.target.value)} placeholder="اكتب رسلتك أو رابط السكرين شوت هنا..." className="flex-1 px-4 py-2 border rounded-xl text-xs" />
+              <button type="submit" className="bg-[#2d3a2e] text-white px-5 py-2 rounded-xl text-xs font-bold">إرسال</button>
             </form>
           </div>
         );
       }
 
-      // لوحة تحكم الأدمن الكاملة
       function AdminPanel({ lang, settings, products, orders }) {
-        const [activeTab, setActiveTab] = useState('products'); // products, chats, settings
+        const [activeTab, setActiveTab] = useState('products');
         const [name, setName] = useState('');
         const [desc, setDesc] = useState('');
         const [price, setPrice] = useState('');
@@ -587,35 +563,22 @@
 
         const addProduct = (e) => {
           e.preventDefault();
-          if (!name || !price || !img1) {
-            alert("يرجى إدخال اسم المنتج، السعر، والصورة الرئيسية على الأقل.");
-            return;
-          }
-
-          const images = [img1, img2, img3, img4].filter(Boolean);
-          const productsRef = window.dbRef(window.db, 'products');
-          window.dbPush(productsRef, {
-            name,
-            description: desc,
-            price: Number(price),
-            images,
-            status: 'available',
-            createdAt: Date.now()
+          if (!name || !price || !img1) return alert("أدخل الاسم والسعر وصورة واحدة على الأقل");
+          window.dbPush(window.dbRef(window.db, 'products'), {
+            name, description: desc, price: Number(price),
+            images: [img1, img2, img3, img4].filter(Boolean),
+            status: 'available', createdAt: Date.now()
           });
-
           setName(''); setDesc(''); setPrice(''); setImg1(''); setImg2(''); setImg3(''); setImg4('');
           alert("تم إضافة المنتج بنجاح!");
         };
 
         const toggleStatus = (id, currentStatus) => {
-          const newStatus = currentStatus === 'sold' ? 'available' : 'sold';
-          window.dbUpdate(window.dbRef(window.db, `products/${id}`), { status: newStatus });
+          window.dbUpdate(window.dbRef(window.db, `products/${id}`), { status: currentStatus === 'sold' ? 'available' : 'sold' });
         };
 
         const deleteProduct = (id) => {
-          if (confirm("هل أنت متأكد من حذف هذا المنتج؟")) {
-            window.dbRemove(window.dbRef(window.db, `products/${id}`));
-          }
+          if (confirm("هل تريد حذف هذا المنتج؟")) window.dbRemove(window.dbRef(window.db, `products/${id}`));
         };
 
         const saveSettings = (e) => {
@@ -625,178 +588,113 @@
             whatsapp: whatsappInput,
             facebook: facebookInput
           });
-          alert("تم حفظ الإعدادات بنجاح!");
+          alert("تم حفظ الإعدادات!");
         };
 
         const sendAdminMessage = (e) => {
           e.preventDefault();
           if (!adminReply.trim() || !selectedChatUser) return;
-
-          const chatRef = window.dbRef(window.db, `chats/${selectedChatUser}`);
-          window.dbPush(chatRef, {
-            sender: 'admin',
-            senderName: 'الأدمن (أبو صبيح)',
-            text: adminReply,
-            timestamp: Date.now()
+          window.dbPush(window.dbRef(window.db, `chats/${selectedChatUser}`), {
+            sender: 'admin', senderName: 'الأدمن', text: adminReply, timestamp: Date.now()
           });
           setAdminReply('');
         };
 
         return (
-          <div className="bg-white rounded-3xl shadow-sm border border-slate-100 p-6">
-            <div className="flex gap-4 mb-6 border-b border-slate-100 pb-4">
-              <button 
-                onClick={() => setActiveTab('products')}
-                className={`px-4 py-2 rounded-xl text-sm font-bold ${activeTab === 'products' ? 'bg-teal-700 text-white' : 'bg-slate-100 text-slate-700'}`}
-              >
-                إدارة المنتجات والمبيعات
-              </button>
-              <button 
-                onClick={() => setActiveTab('chats')}
-                className={`px-4 py-2 rounded-xl text-sm font-bold ${activeTab === 'chats' ? 'bg-teal-700 text-white' : 'bg-slate-100 text-slate-700'}`}
-              >
-                محادثات العملاء (الشات)
-              </button>
-              <button 
-                onClick={() => setActiveTab('settings')}
-                className={`px-4 py-2 rounded-xl text-sm font-bold ${activeTab === 'settings' ? 'bg-teal-700 text-white' : 'bg-slate-100 text-slate-700'}`}
-              >
-                إعدادات المتجر والتوصيل
-              </button>
+          <div className="bg-white rounded-3xl p-6 shadow-sm border border-slate-200">
+            <div className="flex gap-3 mb-6 border-b pb-4">
+              <button onClick={() => setActiveTab('products')} className={`px-4 py-2 rounded-xl text-xs font-bold ${activeTab === 'products' ? 'bg-[#2d3a2e] text-white' : 'bg-slate-100'}`}>إدارة المنتجات</button>
+              <button onClick={() => setActiveTab('chats')} className={`px-4 py-2 rounded-xl text-xs font-bold ${activeTab === 'chats' ? 'bg-[#2d3a2e] text-white' : 'bg-slate-100'}`}>محادثات العملاء</button>
+              <button onClick={() => setActiveTab('settings')} className={`px-4 py-2 rounded-xl text-xs font-bold ${activeTab === 'settings' ? 'bg-[#2d3a2e] text-white' : 'bg-slate-100'}`}>الإعدادات والتوصيل</button>
             </div>
 
             {activeTab === 'products' && (
-              <div className="grid grid-cols-1 lg:grid-cols-3 gap-8">
-                {/* نموذج إضافة منتج */}
-                <div className="bg-slate-50 p-5 rounded-2xl">
-                  <h3 className="font-bold text-slate-800 mb-4">إضافة معدة/منتج جديد</h3>
-                  <form onSubmit={addProduct} className="space-y-3">
-                    <input type="text" placeholder="اسم المنتج" value={name} onChange={e=>setName(e.target.value)} className="w-full px-3 py-2 border rounded-xl text-sm" />
-                    <textarea placeholder="الوصف (اختياري)" value={desc} onChange={e=>setDesc(e.target.value)} className="w-full px-3 py-2 border rounded-xl text-sm" rows="2" />
-                    <input type="number" placeholder="السعر الأساسي" value={price} onChange={e=>setPrice(e.target.value)} className="w-full px-3 py-2 border rounded-xl text-sm" />
-                    
-                    <input type="text" placeholder="رابط الصورة الرئيسية (إجباري)" value={img1} onChange={e=>setImg1(e.target.value)} className="w-full px-3 py-2 border rounded-xl text-sm" />
-                    <input type="text" placeholder="رابط الصورة 2 (اختياري)" value={img2} onChange={e=>setImg2(e.target.value)} className="w-full px-3 py-2 border rounded-xl text-sm" />
-                    <input type="text" placeholder="رابط الصورة 3 (اختياري)" value={img3} onChange={e=>setImg3(e.target.value)} className="w-full px-3 py-2 border rounded-xl text-sm" />
-                    <input type="text" placeholder="رابط الصورة 4 (اختياري)" value={img4} onChange={e=>setImg4(e.target.value)} className="w-full px-3 py-2 border rounded-xl text-sm" />
+              <div className="grid grid-cols-1 lg:grid-cols-3 gap-6">
+                <form onSubmit={addProduct} className="bg-slate-50 p-4 rounded-2xl space-y-3">
+                  <h3 className="font-bold text-xs">إضافة منتج جديد</h3>
+                  <input type="text" placeholder="اسم المنتج" value={name} onChange={e=>setName(e.target.value)} className="w-full p-2 border rounded-xl text-xs" />
+                  <textarea placeholder="الوصف (اختياري)" value={desc} onChange={e=>setDesc(e.target.value)} className="w-full p-2 border rounded-xl text-xs" rows="2" />
+                  <input type="number" placeholder="السعر" value={price} onChange={e=>setPrice(e.target.value)} className="w-full p-2 border rounded-xl text-xs" />
+                  <input type="text" placeholder="رابط الصورة 1 (إجباري)" value={img1} onChange={e=>setImg1(e.target.value)} className="w-full p-2 border rounded-xl text-xs" />
+                  <input type="text" placeholder="رابط الصورة 2 (اختياري)" value={img2} onChange={e=>setImg2(e.target.value)} className="w-full p-2 border rounded-xl text-xs" />
+                  <input type="text" placeholder="رابط الصورة 3 (اختياري)" value={img3} onChange={e=>setImg3(e.target.value)} className="w-full p-2 border rounded-xl text-xs" />
+                  <input type="text" placeholder="رابط الصورة 4 (اختياري)" value={img4} onChange={e=>setImg4(e.target.value)} className="w-full p-2 border rounded-xl text-xs" />
+                  <button type="submit" className="w-full bg-[#2d3a2e] text-white py-2 rounded-xl text-xs font-bold">إضافة للمتجر</button>
+                </form>
 
-                    <button type="submit" className="w-full bg-teal-700 text-white py-2.5 rounded-xl text-sm font-bold hover:bg-teal-800">
-                      إضافة المنتج للمتجر
-                    </button>
-                  </form>
-                </div>
-
-                {/* قائمة المنتجات الحالية وتغيير حالتها */}
-                <div className="lg:col-span-2">
-                  <h3 className="font-bold text-slate-800 mb-4">المنتجات المعروضة ومتابعة حالتها</h3>
-                  <div className="space-y-3">
-                    {Object.keys(products).length === 0 ? (
-                      <p className="text-slate-400 text-sm">لا توجد منتجات مضافة.</p>
-                    ) : (
-                      Object.keys(products).map(id => {
-                        const p = products[id];
-                        const isSold = p.status === 'sold';
-                        return (
-                          <div key={id} className="flex items-center justify-between p-3 border rounded-xl bg-white shadow-sm">
-                            <div className="flex items-center gap-3">
-                              <img src={p.images?.[0] || p.image} alt="" className="w-12 h-12 rounded-lg object-cover" />
-                              <div>
-                                <h4 className="font-bold text-slate-800 text-sm">{p.name}</h4>
-                                <span className="text-xs text-teal-700 font-bold">{p.price} ج.م</span>
-                              </div>
-                            </div>
-                            <div className="flex items-center gap-2">
-                              <button 
-                                onClick={() => toggleStatus(id, p.status)}
-                                className={`px-3 py-1.5 rounded-lg text-xs font-bold ${isSold ? 'bg-red-100 text-red-700' : 'bg-teal-100 text-teal-700'}`}
-                              >
-                                {isSold ? 'تم البيع (تغيير لمتوفر)' : 'متوفر (تغيير لمباع)'}
-                              </button>
-                              <button onClick={() => deleteProduct(id)} className="text-red-500 hover:text-red-700 text-xs font-bold px-2 py-1">
-                                حذف
-                              </button>
-                            </div>
+                <div className="lg:col-span-2 space-y-3">
+                  <h3 className="font-bold text-xs">المنتجات الحالية</h3>
+                  {Object.keys(products).map(id => {
+                    const p = products[id];
+                    const isSold = p.status === 'sold';
+                    return (
+                      <div key={id} className="flex items-center justify-between p-3 border rounded-xl bg-white">
+                        <div className="flex items-center gap-3">
+                          <img src={p.images?.[0] || p.image} alt="" className="w-10 h-10 rounded object-cover" />
+                          <div>
+                            <div className="font-bold text-xs">{p.name}</div>
+                            <div className="text-[10px] text-[#3d5a3e]">{p.price} ج.م</div>
                           </div>
-                        );
-                      })
-                    )}
-                  </div>
+                        </div>
+                        <div className="flex gap-2">
+                          <button onClick={() => toggleStatus(id, p.status)} className={`px-2 py-1 rounded text-[10px] font-bold ${isSold ? 'bg-red-100 text-red-700' : 'bg-emerald-100 text-emerald-700'}`}>
+                            {isSold ? 'مباع (اجعله متوفر)' : 'متوفر (اجعله مباع)'}
+                          </button>
+                          <button onClick={() => deleteProduct(id)} className="text-red-600 text-[10px] font-bold">حذف</button>
+                        </div>
+                      </div>
+                    );
+                  })}
                 </div>
               </div>
             )}
 
             {activeTab === 'chats' && (
-              <div className="grid grid-cols-1 md:grid-cols-3 gap-6 h-[60vh]">
+              <div className="grid grid-cols-1 md:grid-cols-3 gap-4 h-[50vh]">
                 <div className="border rounded-2xl p-3 overflow-y-auto bg-slate-50">
-                  <h4 className="font-bold text-slate-700 mb-3 text-sm">قائمة العملاء (المحادثات المنفصلة)</h4>
-                  {Object.keys(allChats).length === 0 ? (
-                    <p className="text-slate-400 text-xs">لا توجد محادثات حتى الآن.</p>
-                  ) : (
-                    Object.keys(allChats).map(uid => (
-                      <button
-                        key={uid}
-                        onClick={() => setSelectedChatUser(uid)}
-                        className={`w-full text-start p-3 rounded-xl mb-2 text-xs font-semibold ${selectedChatUser === uid ? 'bg-teal-700 text-white' : 'bg-white text-slate-700 border'}`}
-                      >
-                        عميل معرف: {uid.slice(0, 8)}...
-                      </button>
-                    ))
-                  )}
+                  <h4 className="font-bold text-xs mb-3">العملاء</h4>
+                  {Object.keys(allChats).map(uid => (
+                    <button key={uid} onClick={() => setSelectedChatUser(uid)} className={`w-full text-start p-2 rounded-xl mb-1 text-xs ${selectedChatUser === uid ? 'bg-[#2d3a2e] text-white' : 'bg-white border'}`}>
+                      عميل: {uid.slice(0, 6)}...
+                    </button>
+                  ))}
                 </div>
-
                 <div className="md:col-span-2 border rounded-2xl flex flex-col bg-slate-50">
                   {selectedChatUser ? (
                     <>
-                      <div className="p-3 bg-white border-b rounded-t-2xl font-bold text-xs text-slate-700">
-                        محادثة مع العميل: {selectedChatUser}
-                      </div>
-                      <div className="flex-1 p-3 overflow-y-auto space-y-3">
+                      <div className="p-3 bg-white border-b text-xs font-bold">محادثة العميل</div>
+                      <div className="flex-1 p-3 overflow-y-auto space-y-2">
                         {Object.values(allChats[selectedChatUser] || {}).map((m, i) => (
                           <div key={i} className={`flex flex-col ${m.sender === 'admin' ? 'items-end' : 'items-start'}`}>
-                            <div className={`p-2.5 rounded-xl text-xs max-w-[80%] ${m.sender === 'admin' ? 'bg-teal-700 text-white' : 'bg-white border text-slate-800'}`}>
-                              <span className="block font-bold text-[10px] opacity-75 mb-0.5">{m.senderName}</span>
-                              {m.text}
-                            </div>
+                            <div className={`p-2 rounded-xl text-xs max-w-[80%] ${m.sender === 'admin' ? 'bg-[#2d3a2e] text-white' : 'bg-white border'}`}>{m.text}</div>
                           </div>
                         ))}
                       </div>
-                      <form onSubmit={sendAdminMessage} className="p-3 bg-white border-t rounded-b-2xl flex gap-2">
-                        <input
-                          type="text"
-                          value={adminReply}
-                          onChange={e=>setAdminReply(e.target.value)}
-                          placeholder="رد الأدمن على العميل..."
-                          className="flex-1 px-3 py-2 border rounded-xl text-xs"
-                        />
-                        <button type="submit" className="bg-teal-700 text-white px-4 py-2 rounded-xl text-xs font-bold">إرسال الرد</button>
+                      <form onSubmit={sendAdminMessage} className="p-2 bg-white border-t flex gap-2">
+                        <input type="text" value={adminReply} onChange={e=>setAdminReply(e.target.value)} placeholder="رد الأدمن..." className="flex-1 p-2 border rounded-xl text-xs" />
+                        <button type="submit" className="bg-[#2d3a2e] text-white px-4 py-2 rounded-xl text-xs font-bold">إرسال</button>
                       </form>
                     </>
-                  ) : (
-                    <div className="flex items-center justify-center h-full text-slate-400 text-sm">
-                      اختر عميلاً من القائمة لعرض المحادثة والرد عليه
-                    </div>
-                  )}
+                  ) : <div className="flex items-center justify-center h-full text-xs text-slate-400">اختر عميلاً</div>}
                 </div>
               </div>
             )}
 
             {activeTab === 'settings' && (
-              <form onSubmit={saveSettings} className="max-w-md space-y-4">
+              <form onSubmit={saveSettings} className="max-w-md space-y-3">
                 <div>
-                  <label className="block text-sm font-bold text-slate-700 mb-1">سعر خدمة التوصيل (ج.م)</label>
-                  <input type="number" value={deliveryFeeInput} onChange={e=>setDeliveryFeeInput(e.target.value)} className="w-full px-3 py-2 border rounded-xl text-sm" />
+                  <label className="block text-xs font-bold mb-1">سعر التوصيل (ج.م)</label>
+                  <input type="number" value={deliveryFeeInput} onChange={e=>setDeliveryFeeInput(e.target.value)} className="w-full p-2 border rounded-xl text-xs" />
                 </div>
                 <div>
-                  <label className="block text-sm font-bold text-slate-700 mb-1">رابط واتساب (تواصل الأيقونة)</label>
-                  <input type="text" value={whatsappInput} onChange={e=>setWhatsappInput(e.target.value)} placeholder="https://wa.me/..." className="w-full px-3 py-2 border rounded-xl text-sm" />
+                  <label className="block text-xs font-bold mb-1">رابط واتساب</label>
+                  <input type="text" value={whatsappInput} onChange={e=>setWhatsappInput(e.target.value)} className="w-full p-2 border rounded-xl text-xs" />
                 </div>
                 <div>
-                  <label className="block text-sm font-bold text-slate-700 mb-1">رابط فيسبوك (تواصل الأيقونة)</label>
-                  <input type="text" value={facebookInput} onChange={e=>setFacebookInput(e.target.value)} placeholder="https://facebook.com/..." className="w-full px-3 py-2 border rounded-xl text-sm" />
+                  <label className="block text-xs font-bold mb-1">رابط فيسبوك</label>
+                  <input type="text" value={facebookInput} onChange={e=>setFacebookInput(e.target.value)} className="w-full p-2 border rounded-xl text-xs" />
                 </div>
-                <button type="submit" className="bg-teal-700 text-white px-6 py-2.5 rounded-xl text-sm font-bold hover:bg-teal-800">
-                  حفظ الإعدادات
-                </button>
+                <button type="submit" className="bg-[#2d3a2e] text-white px-5 py-2 rounded-xl text-xs font-bold">حفظ الإعدادات</button>
               </form>
             )}
           </div>
