@@ -1,704 +1,228 @@
-<!doctype html>
-<html lang="ar" dir="rtl" id="html-root">
-  <head>
-    <meta charset="UTF-8" />
-    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-    <title>أبو صبيح - ABOSABEH</title>
-    
-    <!-- خطوط جوجل -->
-    <link rel="preconnect" href="https://fonts.googleapis.com">
-    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
-    <link href="https://fonts.googleapis.com/css2?family=Cairo:wght@400;600;700&display=swap" rel="stylesheet">
-    
-    <!-- Tailwind CSS -->
-    <script src="https://cdn.tailwindcss.com"></script>
-    <script>
-      tailwind.config = {
-        theme: {
-          extend: {
-            colors: {
-              'brand-dark': '#2d3a2e',
-              'brand-green': '#3d5a3e',
-              'brand-cream': '#faf8f5',
-            },
-            fontFamily: {
-              cairo: ['Cairo', 'sans-serif'],
-            }
-          }
-        }
-      }
-    </script>
+<!DOCTYPE html>
+<html lang="ar" dir="rtl"><head><meta charset="utf-8"><meta name="viewport" content="width=device-width,initial-scale=1">
+<title>Abosabeh</title>
+<link href="https://fonts.googleapis.com/css2?family=Bricolage+Grotesque:wght@400;600;800&family=Cairo:wght@400;600;800&display=swap" rel="stylesheet">
+<style>
+:root{--ink:#14302c;--bg:#eef2f0;--card:#fff;--line:#cdd8d4;--acc:#e8a317;--mute:#5d716c;--r:6px}
+*{box-sizing:border-box}body{margin:0;background:var(--bg);color:var(--ink);font:16px/1.6 'Bricolage Grotesque','Cairo',sans-serif}
+html[lang=ar] body{font-family:'Cairo','Bricolage Grotesque',sans-serif}
+a{color:inherit}button,input,select,textarea{font:inherit;color:inherit}
+:focus-visible{outline:3px solid var(--acc);outline-offset:2px}
+header{position:sticky;top:0;z-index:5;background:var(--ink);color:#fff;display:flex;align-items:center;gap:14px;padding:10px 20px;flex-wrap:wrap}
+header .logo{font-weight:800;font-size:1.5rem;text-decoration:none;margin-inline-end:auto;border-bottom:4px solid var(--acc)}
+header a,header button{color:#fff;background:none;border:0;cursor:pointer;text-decoration:none;padding:4px 8px;border-radius:var(--r)}
+header a:hover,header button:hover{background:#ffffff22}
+.avatar{width:28px;height:28px;border-radius:50%;vertical-align:middle}
+main{max-width:1080px;margin:0 auto;padding:24px 20px 60px}
+.hero{padding:40px 0 28px;border-inline-start:10px solid var(--acc);padding-inline-start:22px;margin-bottom:28px}
+.hero h1{font-size:clamp(2.6rem,9vw,5.5rem);line-height:1;margin:0 0 8px;font-weight:800}
+.hero p{margin:0;max-width:46ch;color:var(--mute);font-size:1.1rem}
+.grid{display:grid;grid-template-columns:repeat(auto-fill,minmax(230px,1fr));gap:18px}
+.card{background:var(--card);border:1px solid var(--line);border-radius:var(--r);overflow:hidden;text-decoration:none;display:block}
+.card img{width:100%;aspect-ratio:4/3;object-fit:cover;display:block;background:var(--line)}
+.card .b{padding:12px 14px}.card h3{margin:0 0 4px;font-size:1.05rem}
+.price{font-weight:800}
+.btn{background:var(--ink);color:#fff;border:0;border-radius:var(--r);padding:10px 18px;cursor:pointer;font-weight:600}
+.btn.acc{background:var(--acc);color:var(--ink)}.btn.sm{padding:4px 10px;font-size:.85rem}.btn.ghost{background:none;color:var(--ink);border:1px solid var(--ink)}
+.btn.red{background:#b3261e}
+input,select,textarea{width:100%;padding:9px 11px;border:1px solid var(--line);border-radius:var(--r);background:#fff}
+label{display:block;font-weight:600;margin:12px 0 4px}
+.panel{background:var(--card);border:1px solid var(--line);border-radius:var(--r);padding:18px;margin-bottom:16px}
+.row{display:flex;gap:12px;flex-wrap:wrap;align-items:center}.row>*{flex:1 1 auto}.row>.btn{flex:0 0 auto}
+.pd{display:grid;grid-template-columns:1fr 1fr;gap:28px}@media(max-width:720px){.pd{grid-template-columns:1fr}}
+.pd .main{width:100%;aspect-ratio:4/3;object-fit:cover;border-radius:var(--r);background:var(--line)}
+.thumbs{display:flex;gap:8px;margin-top:8px}.thumbs img{width:64px;height:64px;object-fit:cover;border-radius:var(--r);cursor:pointer;border:2px solid transparent}.thumbs img.on{border-color:var(--acc)}
+.tabs{display:flex;gap:6px;margin-bottom:16px;flex-wrap:wrap}.tabs button{border:1px solid var(--ink);background:none;padding:6px 14px;border-radius:99px;cursor:pointer}.tabs button.on{background:var(--ink);color:#fff}
+.slots{display:grid;grid-template-columns:repeat(4,1fr);gap:8px}.slot{border:1px dashed var(--mute);border-radius:var(--r);padding:6px;text-align:center;font-size:.8rem;min-height:100px}
+.slot img{width:100%;height:64px;object-fit:cover;border-radius:4px}.slot input{padding:2px;font-size:.7rem}
+.chatbox{height:50vh;overflow:auto;background:#f6f8f7;border:1px solid var(--line);border-radius:var(--r);padding:12px;display:flex;flex-direction:column;gap:8px}
+.msg{max-width:75%;padding:8px 12px;border-radius:12px;background:#fff;border:1px solid var(--line);align-self:flex-start;overflow-wrap:anywhere}
+.msg.me{align-self:flex-end;background:var(--ink);color:#fff;border-color:var(--ink)}
+.msg img{max-width:100%;border-radius:6px;display:block;margin-top:4px;cursor:zoom-in}
+.msg small{display:block;opacity:.6;font-size:.7rem}
+.split{display:grid;grid-template-columns:240px 1fr;gap:16px}@media(max-width:720px){.split{grid-template-columns:1fr}}
+.clist button{display:block;width:100%;text-align:start;background:#fff;border:1px solid var(--line);border-radius:var(--r);padding:8px 10px;margin-bottom:6px;cursor:pointer}
+.clist button.on{border-color:var(--acc);border-width:2px}.clist small{display:block;color:var(--mute);white-space:nowrap;overflow:hidden;text-overflow:ellipsis}
+.stat{font-size:2rem;font-weight:800}
+footer{background:var(--ink);color:#fff;padding:20px;text-align:center}footer a{margin:0 10px}
+.muted{color:var(--mute)}.empty{padding:40px;text-align:center;color:var(--mute)}
+#toast{position:fixed;bottom:20px;inset-inline-start:20px;background:var(--ink);color:#fff;padding:10px 16px;border-radius:var(--r);display:none;z-index:9}
+@media(prefers-reduced-motion:no-preference){.hero h1{animation:in .6s ease-out}@keyframes in{from{opacity:0;transform:translateY(14px)}}}
+</style></head><body>
+<header id="hd"></header><main id="app"></main><footer id="ft"></footer><div id="toast"></div>
 
-    <!-- React & Babel -->
-    <script crossorigin src="https://unpkg.com/react@18/umd/react.production.min.js"></script>
-    <script crossorigin src="https://unpkg.com/react-dom@18/umd/react-dom.production.min.js"></script>
-    <script src="https://unpkg.com/@babel/standalone/babel.min.js"></script>
-    
-    <!-- Firebase SDKs -->
-    <script type="module">
-      import { initializeApp } from "https://www.gstatic.com/firebasejs/10.7.1/firebase-app.js";
-      import { getAuth, GoogleAuthProvider, signInWithPopup, signOut, onAuthStateChanged } from "https://www.gstatic.com/firebasejs/10.7.1/firebase-auth.js";
-      import { getDatabase, ref, set, push, onValue, update, remove } from "https://www.gstatic.com/firebasejs/10.7.1/firebase-database.js";
+<script src="https://cdnjs.cloudflare.com/ajax/libs/firebase/10.12.2/firebase-app-compat.min.js"></script>
+<script src="https://cdnjs.cloudflare.com/ajax/libs/firebase/10.12.2/firebase-auth-compat.min.js"></script>
+<script src="https://cdnjs.cloudflare.com/ajax/libs/firebase/10.12.2/firebase-firestore-compat.min.js"></script>
+<script>
+/* ===== 1. CONFIG: paste your Firebase web-app config and admin Gmail(s) ===== */
+const CONFIG={
+  firebase:{apiKey:"YOUR_API_KEY",authDomain:"YOUR_PROJECT.firebaseapp.com",projectId:"YOUR_PROJECT_ID",appId:"YOUR_APP_ID"},
+  admins:["admin@gmail.com"]
+};
+/* ========================================================================== */
+firebase.initializeApp(CONFIG.firebase);
+const auth=firebase.auth(),db=firebase.firestore(),TS=()=>firebase.firestore.FieldValue.serverTimestamp();
 
-      window.firebaseConfig = {
-        apiKey: "AIzaSyBMpZ7CXOJbgKpMqOjzsbbCcpHBlslU3mw",
-        authDomain: "salah-52496.firebaseapp.com",
-        databaseURL: "https://salah-52496-default-rtdb.europe-west1.firebasedatabase.app",
-        projectId: "salah-52496",
-        storageBucket: "salah-52496.firebasestorage.app",
-        messagingSenderId: "235427387836",
-        appId: "1:235427387836:web:5ad91f888f013bb603f3b9",
-        measurementId: "G-MK9QC8X5QQ"
-      };
+const T={en:{shop:'Shop',chat:'Messages',admin:'Dashboard',login:'Sign in with Google',logout:'Sign out',tag:'Equipment you can count on. Order online, pick up or get it delivered.',cur:'EGP',add:'Add to cart',cart:'Cart',empty:'Nothing here yet.',pickup:'Pickup from store',delivery:'Home delivery',addr:'Delivery address',phone:'Phone number',sub:'Subtotal',fee:'Delivery fee',total:'Total',place:'Place order',needLogin:'Sign in to continue.',ordered:'Order placed. Send your payment proof here.',send:'Send',msg:'Type a message',proof:'Attach payment proof',products:'Products',sales:'Sales',chats:'Chats',settings:'Settings',name:'Name',desc:'Description',pr:'Price',imgs:'Images (up to 4)',save:'Save product',edit:'Edit',del:'Delete',rm:'Remove',saved:'Saved',confirmDel:'Delete this item?',revenue:'Revenue',orders:'Orders',status:'Status',new:'New',paid:'Paid',delivered:'Delivered',cancelled:'Cancelled',payInfo:'Payment instructions (shown to customers)',social:'Social links',saveSet:'Save settings',noChat:'Select a conversation.',method:'Receiving method',back:'Back to shop',needAddr:'Enter address and phone.',qty:'Qty'},
+ar:{shop:'المتجر',chat:'الرسائل',admin:'لوحة التحكم',login:'الدخول بحساب جوجل',logout:'تسجيل الخروج',tag:'معدات تعتمد عليها. اطلب أونلاين، واستلم من المتجر أو بالتوصيل لباب البيت.',cur:'ج.م',add:'أضف للسلة',cart:'السلة',empty:'لا يوجد شيء بعد.',pickup:'استلام من المتجر',delivery:'توصيل للمنزل',addr:'عنوان التوصيل',phone:'رقم الهاتف',sub:'المجموع الفرعي',fee:'رسوم التوصيل',total:'الإجمالي',place:'إتمام الطلب',needLogin:'سجّل الدخول للمتابعة.',ordered:'تم إرسال الطلب. أرسل إثبات الدفع هنا.',send:'إرسال',msg:'اكتب رسالة',proof:'إرفاق إثبات الدفع',products:'المنتجات',sales:'المبيعات',chats:'المحادثات',settings:'الإعدادات',name:'الاسم',desc:'الوصف',pr:'السعر',imgs:'الصور (حتى 4)',save:'حفظ المنتج',edit:'تعديل',del:'حذف',rm:'إزالة',saved:'تم الحفظ',confirmDel:'حذف هذا العنصر؟',revenue:'الإيرادات',orders:'الطلبات',status:'الحالة',new:'جديد',paid:'مدفوع',delivered:'تم التسليم',cancelled:'ملغي',payInfo:'تعليمات الدفع (تظهر للعملاء)',social:'روابط التواصل',saveSet:'حفظ الإعدادات',noChat:'اختر محادثة.',method:'طريقة الاستلام',back:'العودة للمتجر',needAddr:'أدخل العنوان ورقم الهاتف.',qty:'الكمية'}};
+let lang=localStorage.lang||'ar',user=null,isAdmin=false,products=[],settings={deliveryFee:0,social:{},payInfo:''},cart=JSON.parse(localStorage.cart||'[]'),tab='products',unsubs=[],draft={imgs:[]},method='pickup';
+const t=k=>T[lang][k]||k,$=s=>document.querySelector(s);
+const esc=s=>String(s??'').replace(/[&<>"']/g,c=>({'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;',"'":'&#39;'}[c]));
+const money=n=>Number(n||0).toLocaleString(lang==='ar'?'ar-EG':'en-US')+' '+t('cur');
+const toast=m=>{const e=$('#toast');e.textContent=m;e.style.display='block';setTimeout(()=>e.style.display='none',2500)};
+const clean=()=>{unsubs.forEach(u=>u());unsubs=[]};
+const saveCart=()=>{localStorage.cart=JSON.stringify(cart);head()};
+const safeUrl=u=>/^https?:\/\//i.test(u||'')?u:'';
+function compress(file,max=800){return new Promise(res=>{const r=new FileReader();r.onload=()=>{const i=new Image();i.onload=()=>{const s=Math.min(1,max/Math.max(i.width,i.height)),c=document.createElement('canvas');c.width=i.width*s;c.height=i.height*s;c.getContext('2d').drawImage(i,0,0,c.width,c.height);res(c.toDataURL('image/jpeg',.7))};i.src=r.result};r.readAsDataURL(file)})}
 
-      window.app = initializeApp(window.firebaseConfig);
-      window.auth = getAuth(window.app);
-      window.db = getDatabase(window.app);
-      window.GoogleAuthProvider = GoogleAuthProvider;
-      window.signInWithPopup = signInWithPopup;
-      window.signOut = signOut;
-      window.onAuthStateChanged = onAuthStateChanged;
-      window.dbRef = ref;
-      window.dbSet = set;
-      window.dbPush = push;
-      window.dbOnValue = onValue;
-      window.dbUpdate = update;
-      window.dbRemove = remove;
-      
-      window.dispatchEvent(new Event('firebase-ready'));
-    </script>
+/* ---------- shell ---------- */
+function head(){
+  document.documentElement.lang=lang;document.documentElement.dir=lang==='ar'?'rtl':'ltr';
+  const n=cart.reduce((a,c)=>a+c.q,0);
+  $('#hd').innerHTML=`<a class="logo" href="#">Abosabeh</a><a href="#">${t('shop')}</a>
+  <a href="#cart">${t('cart')} (${n})</a>${user?`<a href="#chat">${t('chat')}</a>`:''}${isAdmin?`<a href="#admin">${t('admin')}</a>`:''}
+  <button onclick="setLang()">${lang==='ar'?'English':'العربية'}</button>
+  ${user?`<img class="avatar" src="${esc(user.photoURL)}" alt=""><button onclick="auth.signOut()">${t('logout')}</button>`:`<button onclick="login()">${t('login')}</button>`}`;
+  const s=settings.social||{},L=[];
+  if(s.whatsapp)L.push(['WhatsApp','https://wa.me/'+String(s.whatsapp).replace(/\D/g,'')]);
+  ['facebook','instagram','tiktok','youtube'].forEach(k=>s[k]&&safeUrl(s[k])&&L.push([k[0].toUpperCase()+k.slice(1),s[k]]));
+  $('#ft').innerHTML=L.map(([n,u])=>`<a href="${esc(u)}" target="_blank" rel="noopener">${n}</a>`).join('')+`<div class="muted" style="margin-top:8px">© Abosabeh</div>`;
+}
+function setLang(){lang=lang==='ar'?'en':'ar';localStorage.lang=lang;head();route()}
+function login(){auth.signInWithPopup(new firebase.auth.GoogleAuthProvider()).catch(e=>toast(e.message))}
+auth.onAuthStateChanged(u=>{user=u;isAdmin=!!u&&CONFIG.admins.includes(u.email);head();route()});
+db.collection('products').orderBy('createdAt','desc').onSnapshot(s=>{products=s.docs.map(d=>({id:d.id,...d.data()}));if(/^(#?|#p\/.*|#cart)$/.test(location.hash))route()});
+db.doc('settings/store').onSnapshot(s=>{settings={deliveryFee:0,social:{},payInfo:'',...(s.data()||{})};head();if(location.hash==='#cart')route()});
+window.onhashchange=route;
 
-    <style>
-      body { font-family: 'Cairo', sans-serif; background-color: #faf8f5; color: #2d3a2e; }
-    </style>
-  </head>
-  <body class="bg-[#faf8f5] min-h-screen">
-    <div id="root"></div>
+function route(){
+  clean();const h=location.hash,a=$('#app');
+  if(h.startsWith('#p/'))return product(a,h.slice(3));
+  if(h==='#cart')return cartView(a);
+  if(h==='#chat')return user?chatPage(a):need(a);
+  if(h==='#admin')return isAdmin?adminPage(a):need(a);
+  shop(a);
+}
+const need=a=>a.innerHTML=`<div class="empty">${t('needLogin')}<br><br><button class="btn" onclick="login()">${t('login')}</button></div>`;
 
-    <script type="text/babel">
-      const { useState, useEffect } = React;
+/* ---------- storefront ---------- */
+function shop(a){
+  a.innerHTML=`<section class="hero"><h1>Abosabeh</h1><p>${t('tag')}</p></section>
+  <div class="grid">${products.map(p=>`<a class="card" href="#p/${p.id}"><img src="${esc((p.images||[])[0]||'')}" alt="${esc(p.name)}"><div class="b"><h3>${esc(p.name)}</h3><span class="price">${money(p.price)}</span></div></a>`).join('')||`<div class="empty">${t('empty')}</div>`}</div>`;
+}
+function product(a,id){
+  const p=products.find(x=>x.id===id);if(!p)return a.innerHTML=`<div class="empty">${t('empty')}</div>`;
+  const im=p.images||[];
+  a.innerHTML=`<p><a href="#">${t('back')}</a></p><div class="pd"><div><img id="mi" class="main" src="${esc(im[0]||'')}" alt="${esc(p.name)}">
+  <div class="thumbs">${im.map((s,i)=>`<img class="${i?'':'on'}" src="${esc(s)}" alt="" onclick="$('#mi').src=this.src;document.querySelectorAll('.thumbs img').forEach(x=>x.classList.toggle('on',x===this))">`).join('')}</div></div>
+  <div><h1 style="margin-top:0">${esc(p.name)}</h1><p class="price" style="font-size:1.6rem">${money(p.price)}</p><p style="white-space:pre-wrap">${esc(p.description)}</p>
+  <button class="btn acc" onclick="addCart('${p.id}')">${t('add')}</button></div></div>`;
+}
+function addCart(id){const c=cart.find(x=>x.id===id);c?c.q++:cart.push({id,q:1});saveCart();toast(t('saved'))}
+function qty(id,d){const c=cart.find(x=>x.id===id);c.q+=d;if(c.q<1)cart=cart.filter(x=>x!==c);saveCart();route()}
+function cartCalc(){const items=cart.map(c=>({...c,p:products.find(p=>p.id===c.id)})).filter(c=>c.p);const sub=items.reduce((a,c)=>a+c.p.price*c.q,0),fee=method==='delivery'?Number(settings.deliveryFee||0):0;return{items,sub,fee,total:sub+fee}}
+function cartView(a){
+  const k=cartCalc();
+  if(!k.items.length)return a.innerHTML=`<div class="empty">${t('empty')}</div>`;
+  a.innerHTML=`<h1>${t('cart')}</h1><div class="panel">${k.items.map(c=>`<div class="row" style="margin-bottom:8px"><span>${esc(c.p.name)}</span><span>${money(c.p.price)}</span>
+  <span><button class="btn sm ghost" onclick="qty('${c.id}',-1)">−</button> ${c.q} <button class="btn sm ghost" onclick="qty('${c.id}',1)">+</button></span></div>`).join('')}</div>
+  <div class="panel"><b>${t('method')}</b>
+  <label><input type="radio" name="m" style="width:auto" ${method==='pickup'?'checked':''} onchange="method='pickup';route()"> ${t('pickup')}</label>
+  <label><input type="radio" name="m" style="width:auto" ${method==='delivery'?'checked':''} onchange="method='delivery';route()"> ${t('delivery')} (${money(settings.deliveryFee)})</label>
+  <div id="dl" ${method==='delivery'?'':'hidden'}><label>${t('addr')}</label><textarea id="ad" rows="2"></textarea></div>
+  <label>${t('phone')}</label><input id="ph" type="tel" dir="ltr"></div>
+  <div class="panel"><div class="row"><span>${t('sub')}</span><b>${money(k.sub)}</b></div><div class="row"><span>${t('fee')}</span><b>${money(k.fee)}</b></div>
+  <div class="row"><span>${t('total')}</span><b class="stat">${money(k.total)}</b></div>
+  ${settings.payInfo?`<p class="muted" style="white-space:pre-wrap">${esc(settings.payInfo)}</p>`:''}
+  <button class="btn acc" onclick="placeOrder()">${t('place')}</button></div>`;
+}
+async function placeOrder(){
+  if(!user)return toast(t('needLogin'));
+  const ad=($('#ad')||{}).value||'',ph=$('#ph').value.trim();
+  if(!ph||(method==='delivery'&&!ad.trim()))return toast(t('needAddr'));
+  const k=cartCalc(),items=k.items.map(c=>({name:c.p.name,price:c.p.price,q:c.q}));
+  const o=await db.collection('orders').add({uid:user.uid,name:user.displayName,email:user.email,items,method,address:ad,phone:ph,subtotal:k.sub,fee:k.fee,total:k.total,status:'new',createdAt:TS()});
+  const text=`#${o.id.slice(0,6)} — `+items.map(i=>`${i.name} ×${i.q}`).join(', ')+`\n${t('total')}: ${money(k.total)} (${t(method)})`;
+  await sendMsg(user.uid,{from:'user',text});
+  cart=[];saveCart();toast(t('ordered'));location.hash='#chat';
+}
 
-      const translations = {
-        ar: {
-          brand: "أبو صبيح",
-          solutions: "المعدات",
-          plans: "المبيعات",
-          news: "خدمة العملاء",
-          login: "تسجيل الدخول بـ Google",
-          logout: "خروج",
-          adminPanel: "لوحة الأدمن",
-          storePickup: "استلام من المتجر",
-          delivery: "توصيل للمنزل",
-          price: "السعر",
-          deliveryFee: "رسوم التوصيل",
-          buyNow: "عرض التفاصيل والطلب",
-          chatWithAdmin: "محادثة الأدمن",
-          statusAvailable: "متوفر",
-          statusSold: "تم البيع",
-          send: "إرسال",
-          typeMessage: "اكتب رسلتك أو ارفق رابط السكرين شوت هنا...",
-          settings: "الإعدادات وروابط التواصل",
-          products: "المنتجات والمعدات",
-          sales: "المبيعات والطلبات",
-          save: "حفظ",
-          cancel: "إلغاء",
-          addProduct: "إضافة معدة/منتج جديد",
-          productName: "اسم المنتج",
-          productDesc: "الوصف (اختياري)",
-          productPrice: "السعر الأساسي",
-          images: "روابط الصور (من 1 إلى 4 صور)",
-        },
-        en: {
-          brand: "ABOSABEH",
-          solutions: "Equipment",
-          plans: "Sales",
-          news: "Customer Service",
-          login: "Sign in with Google",
-          logout: "Logout",
-          adminPanel: "Admin Panel",
-          storePickup: "Store Pickup",
-          delivery: "Home Delivery",
-          price: "Price",
-          deliveryFee: "Delivery Fee",
-          buyNow: "View Details & Order",
-          chatWithAdmin: "Chat with Admin",
-          statusAvailable: "Available",
-          statusSold: "Sold Out",
-          send: "Send",
-          typeMessage: "Type your message or paste screenshot link...",
-          settings: "Settings & Social Links",
-          products: "Products & Equipment",
-          sales: "Sales & Orders",
-          save: "Save",
-          cancel: "Cancel",
-          addProduct: "Add New Product",
-          productName: "Product Name",
-          productDesc: "Description (Optional)",
-          productPrice: "Base Price",
-          images: "Image URLs (1 to 4 images)",
-        }
-      };
+/* ---------- private chat ---------- */
+async function sendMsg(uid,m){
+  const ref=db.collection('chats').doc(uid);
+  await ref.collection('messages').add({...m,at:TS()});
+  const up={updatedAt:TS(),last:m.text||'📎'};
+  if(m.from==='user')Object.assign(up,{uid,name:user.displayName,email:user.email,photo:user.photoURL||''});
+  await ref.set(up,{merge:true});
+}
+function chatUI(el,uid,from){
+  el.innerHTML=`<div class="chatbox" id="cb"></div><div class="row" style="margin-top:8px"><input id="ci" placeholder="${t('msg')}">
+  <label class="btn ghost" style="margin:0" title="${t('proof')}">📎 ${t('proof')}<input id="cf" type="file" accept="image/*" hidden></label><button class="btn" id="cs">${t('send')}</button></div>`;
+  const send=async()=>{const v=$('#ci').value.trim();if(!v)return;$('#ci').value='';await sendMsg(uid,{from,text:v})};
+  $('#cs').onclick=send;$('#ci').onkeydown=e=>{if(e.key==='Enter')send()};
+  $('#cf').onchange=async e=>{const f=e.target.files[0];if(f)await sendMsg(uid,{from,img:await compress(f,1000)})};
+  unsubs.push(db.collection('chats').doc(uid).collection('messages').orderBy('at').onSnapshot(s=>{
+    const b=$('#cb');if(!b)return;
+    b.innerHTML=s.docs.map(d=>{const m=d.data();return `<div class="msg ${m.from===from?'me':''}">${esc(m.text||'').replace(/\n/g,'<br>')}${m.img?`<img src="${esc(m.img)}" alt="" onclick="window.open(this.src)">`:''}</div>`}).join('');
+    b.scrollTop=b.scrollHeight}));
+}
+function chatPage(a){a.innerHTML=`<h1>${t('chat')}</h1><div id="cw"></div>`;chatUI($('#cw'),user.uid,'user')}
 
-      function App() {
-        const [lang, setLang] = useState('ar');
-        const [user, setUser] = useState(null);
-        const [isAdmin, setIsAdmin] = useState(false);
-        const [currentView, setCurrentView] = useState('shop');
-        
-        const [products, setProducts] = useState({});
-        const [settings, setSettings] = useState({ deliveryFee: 50, whatsapp: '', facebook: '' });
-        const [orders, setOrders] = useState({});
-        
-        const [selectedProduct, setSelectedProduct] = useState(null);
-        const [activeImageIndex, setActiveImageIndex] = useState(0);
-        const [orderType, setOrderType] = useState('pickup');
-
-        const adminEmails = ["salah@gmail.com", "abosabeh@gmail.com"];
-
-        useEffect(() => {
-          const checkFirebase = setInterval(() => {
-            if (window.auth) {
-              clearInterval(checkFirebase);
-              window.onAuthStateChanged(window.auth, (u) => {
-                if (u) {
-                  setUser(u);
-                  if (adminEmails.includes(u.email) || u.email.includes("admin")) {
-                    setIsAdmin(true);
-                  }
-                } else {
-                  setUser(null);
-                  setIsAdmin(false);
-                }
-              });
-
-              window.dbOnValue(window.dbRef(window.db, 'products'), (snapshot) => {
-                setProducts(snapshot.val() || {});
-              });
-
-              window.dbOnValue(window.dbRef(window.db, 'settings'), (snapshot) => {
-                setSettings(snapshot.val() || { deliveryFee: 50, whatsapp: '', facebook: '' });
-              });
-
-              window.dbOnValue(window.dbRef(window.db, 'orders'), (snapshot) => {
-                setOrders(snapshot.val() || {});
-              });
-            }
-          }, 500);
-        }, []);
-
-        const loginWithGoogle = async () => {
-          try {
-            const provider = new window.GoogleAuthProvider();
-            await window.signInWithPopup(window.auth, provider);
-          } catch (error) {
-            console.error(error);
-            alert("خطأ في تسجيل الدخول: " + error.message);
-          }
-        };
-
-        const logout = async () => {
-          await window.signOut(window.auth);
-          setCurrentView('shop');
-        };
-
-        const scrollToSales = () => {
-          setCurrentView('shop');
-          setTimeout(() => {
-            const element = document.getElementById('sales-section');
-            if (element) {
-              element.scrollIntoView({ behavior: 'smooth' });
-            }
-          }, 100);
-        };
-
-        const t = translations[lang];
-
-        return (
-          <div className="min-h-screen bg-[#faf8f5] text-[#2d3a2e]" dir={lang === 'ar' ? 'rtl' : 'ltr'}>
-            {/* شريط التنقل العلوي */}
-            <header className="fixed top-0 left-0 right-0 z-50 bg-[#faf8f5]/90 backdrop-blur-md shadow-sm">
-              <div className="max-w-7xl mx-auto px-6 lg:px-8">
-                <div className="relative flex items-center h-16 md:h-20 justify-between">
-                  
-                  <nav className="hidden md:flex items-center gap-8">
-                    <button
-                      onClick={() => setCurrentView('shop')}
-                      className="text-sm text-[#2d3a2e] tracking-wide uppercase hover:opacity-70 transition-opacity font-bold cursor-pointer"
-                    >
-                      {t.solutions}
-                    </button>
-                    <button
-                      onClick={scrollToSales}
-                      className="text-sm text-[#2d3a2e] tracking-wide uppercase hover:opacity-70 transition-opacity font-bold cursor-pointer"
-                    >
-                      {t.plans}
-                    </button>
-                    <button
-                      onClick={() => user ? setCurrentView('chat') : alert('يرجى تسجيل الدخول أولاً')}
-                      className="text-sm text-[#2d3a2e] tracking-wide uppercase hover:opacity-70 transition-opacity font-bold cursor-pointer"
-                    >
-                      {t.news}
-                    </button>
-                  </nav>
-
-                  <div 
-                    onClick={() => setCurrentView('shop')}
-                    className="absolute left-1/2 -translate-x-1/2 flex items-center gap-2 select-none cursor-pointer"
-                  >
-                    <span className="text-xl text-[#2d3a2e] font-bold">&#9650;</span>
-                    <span className="text-xl text-[#2d3a2e] tracking-tight font-medium">
-                      {t.brand}
-                    </span>
-                  </div>
-
-                  <div className="flex items-center gap-3">
-                    <button 
-                      onClick={() => {
-                        const newLang = lang === 'ar' ? 'en' : 'ar';
-                        setLang(newLang);
-                        document.getElementById('html-root').setAttribute('dir', newLang === 'ar' ? 'rtl' : 'ltr');
-                      }}
-                      className="px-3 py-1.5 text-xs bg-white border border-[#2d3a2e]/20 hover:bg-slate-100 rounded-full font-bold"
-                    >
-                      {lang === 'ar' ? 'English' : 'العربية'}
-                    </button>
-
-                    {settings.whatsapp && (
-                      <a href={settings.whatsapp} target="_blank" className="text-green-700 font-bold text-xs hidden sm:inline">WhatsApp</a>
-                    )}
-                    {settings.facebook && (
-                      <a href={settings.facebook} target="_blank" className="text-blue-700 font-bold text-xs hidden sm:inline">Facebook</a>
-                    )}
-
-                    {user ? (
-                      <div className="flex items-center gap-2">
-                        {isAdmin && (
-                          <button 
-                            onClick={() => setCurrentView(currentView === 'admin' ? 'shop' : 'admin')}
-                            className="bg-[#2d3a2e] text-white px-3 py-1.5 rounded-full text-xs font-bold hover:bg-[#3d5a3e]"
-                          >
-                            {currentView === 'admin' ? t.solutions : t.adminPanel}
-                          </button>
-                        )}
-                        <button 
-                          onClick={() => setCurrentView('chat')}
-                          className="bg-amber-700 text-white px-3 py-1.5 rounded-full text-xs font-bold"
-                        >
-                          {t.chatWithAdmin}
-                        </button>
-                        <button onClick={logout} className="text-red-600 text-xs font-bold">
-                          {t.logout}
-                        </button>
-                      </div>
-                    ) : (
-                      <button 
-                        onClick={loginWithGoogle}
-                        className="bg-[#2d3a2e] text-white px-4 py-2 rounded-full text-xs font-semibold hover:bg-[#3d5a3e]"
-                      >
-                        {t.login}
-                      </button>
-                    )}
-                  </div>
-
-                </div>
-              </div>
-            </header>
-
-            {/* المحتوى الرئيسي */}
-            <main className="pt-24 pb-12 max-w-7xl mx-auto px-6 lg:px-8">
-              {currentView === 'shop' && (
-                <div>
-                  <section className="relative w-full py-16 text-center md:text-start flex flex-col items-center md:items-start justify-center">
-                    <div className="inline-flex items-center gap-2 px-4 py-2 rounded-full border border-[#2d3a2e]/15 bg-white/60 backdrop-blur-sm mb-6">
-                      <span className="text-xs font-bold text-[#2d3a2e]">
-                        {lang === 'ar' ? 'مرحباً بك في منصة أبو صبيح للمعدات والأجهزة المتكاملة' : 'Welcome to Abosabeh Equipment Store'}
-                      </span>
-                    </div>
-                    <h1 className="text-3xl sm:text-4xl md:text-5xl text-[#2d3a2e] leading-tight font-bold max-w-3xl mb-8">
-                      {lang === 'ar' ? 'المتجر الأول لبيع المعدات والأجهزة مع خدمة التوصيل والشات المباشر' : 'The ultimate store for equipment with delivery & direct chat'}
-                    </h1>
-                    
-                    <button
-                      onClick={scrollToSales}
-                      className="inline-flex items-center gap-2 px-6 py-3 bg-[#2d3a2e] text-white text-sm font-bold rounded-full hover:bg-[#3d5a3e] transition-colors shadow-sm"
-                    >
-                      {lang === 'ar' ? 'انتقل إلى المبيعات والمعروضات 👇' : 'Go to Sales & Equipment 👇'}
-                    </button>
-                  </section>
-
-                  <div id="sales-section" className="mt-12 pt-8 border-t border-[#2d3a2e]/10">
-                    <h2 className="text-2xl font-bold text-[#2d3a2e] mb-6">
-                      {lang === 'ar' ? 'المعدات والمعروضات المتاحة للبيع' : 'Available Equipment & Sales'}
-                    </h2>
-                    
-                    <ShopView 
-                      products={products} 
-                      settings={settings} 
-                      lang={lang} 
-                      onSelectProduct={(p) => { setSelectedProduct(p); setActiveImageIndex(0); }} 
-                    />
-                  </div>
-                </div>
-              )}
-
-              {currentView === 'admin' && isAdmin && (
-                <AdminPanel lang={lang} settings={settings} products={products} orders={orders} />
-              )}
-
-              {currentView === 'chat' && user && (
-                <ChatView user={user} lang={lang} />
-              )}
-            </main>
-
-            {selectedProduct && (
-              <ProductModal 
-                product={selectedProduct} 
-                settings={settings}
-                lang={lang}
-                activeImageIndex={activeImageIndex}
-                setActiveImageIndex={setActiveImageIndex}
-                orderType={orderType}
-                setOrderType={setOrderType}
-                onClose={() => setSelectedProduct(null)}
-                user={user}
-                onOpenChat={() => {
-                  setSelectedProduct(null);
-                  setCurrentView('chat');
-                }}
-              />
-            )}
-          </div>
-        );
-      }
-
-      function ShopView({ products, settings, lang, onSelectProduct }) {
-        const productList = Object.keys(products).map(key => ({ id: key, ...products[key] }));
-
-        return (
-          <div>
-            {productList.length === 0 ? (
-              <div className="text-center py-16 bg-white/50 rounded-2xl border border-[#2d3a2e]/10">
-                <p className="text-[#2d3a2e]/60 text-base font-semibold">
-                  {lang === 'ar' ? 'لا توجد معدات معروضة حالياً.' : 'No equipment available right now.'}
-                </p>
-              </div>
-            ) : (
-              <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-6">
-                {productList.map(item => {
-                  const images = item.images || [item.image || 'https://via.placeholder.com/400'];
-                  const isSold = item.status === 'sold';
-                  
-                  return (
-                    <div key={item.id} className="bg-white rounded-2xl shadow-sm border border-[#2d3a2e]/10 overflow-hidden flex flex-col justify-between">
-                      <div>
-                        <div className="relative h-52 bg-slate-100 overflow-hidden">
-                          <img src={images[0]} alt={item.name} className="w-full h-full object-cover" />
-                          {isSold ? (
-                            <span className="absolute top-3 right-3 bg-red-600 text-white text-xs px-3 py-1 rounded-full font-bold">
-                              {lang === 'ar' ? 'تم البيع' : 'Sold Out'}
-                            </span>
-                          ) : (
-                            <span className="absolute top-3 right-3 bg-[#3d5a3e] text-white text-xs px-3 py-1 rounded-full font-bold">
-                              {lang === 'ar' ? 'متوفر' : 'Available'}
-                            </span>
-                          )}
-                        </div>
-                        <div className="p-4">
-                          <h3 className="text-lg font-bold text-[#2d3a2e] mb-1">{item.name}</h3>
-                          {item.description && (
-                            <p className="text-[#2d3a2e]/70 text-xs line-clamp-2 mb-3">{item.description}</p>
-                          )}
-                          <div className="text-xl font-bold text-[#3d5a3e]">
-                            {item.price} ج.م
-                          </div>
-                        </div>
-                      </div>
-
-                      <div className="p-4 pt-0">
-                        <button
-                          onClick={() => onSelectProduct(item)}
-                          className="w-full bg-[#2d3a2e] text-white py-2.5 rounded-xl text-xs font-bold hover:bg-[#3d5a3e] transition-colors"
-                        >
-                          {lang === 'ar' ? 'عرض التفاصيل والطلب' : 'View Details & Order'}
-                        </button>
-                      </div>
-                    </div>
-                  );
-                })}
-              </div>
-            )}
-          </div>
-        );
-      }
-
-      function ProductModal({ product, settings, lang, activeImageIndex, setActiveImageIndex, orderType, setOrderType, onClose, user, onOpenChat }) {
-        const images = product.images || [product.image || 'https://via.placeholder.com/400'];
-        const deliveryFee = Number(settings.deliveryFee || 50);
-        const totalPrice = orderType === 'delivery' ? Number(product.price) + deliveryFee : Number(product.price);
-
-        return (
-          <div className="fixed inset-0 bg-black/50 z-50 flex items-center justify-center p-4 backdrop-blur-sm">
-            <div className="bg-white rounded-3xl max-w-xl w-full max-h-[90vh] overflow-y-auto p-6 relative">
-              <button onClick={onClose} className="absolute top-4 left-4 bg-slate-100 w-8 h-8 rounded-full font-bold text-slate-700">✕</button>
-
-              <div className="mb-4">
-                <div className="h-64 bg-slate-100 rounded-2xl overflow-hidden mb-2">
-                  <img src={images[activeImageIndex]} alt="" className="w-full h-full object-cover" />
-                </div>
-                {images.length > 1 && (
-                  <div className="flex gap-2">
-                    {images.map((img, idx) => (
-                      <button key={idx} onClick={() => setActiveImageIndex(idx)} className={`w-14 h-14 rounded-lg overflow-hidden border-2 ${activeImageIndex === idx ? 'border-[#3d5a3e]' : 'border-transparent'}`}>
-                        <img src={img} alt="" className="w-full h-full object-cover" />
-                      </button>
-                    ))}
-                  </div>
-                )}
-              </div>
-
-              <h2 className="text-2xl font-bold text-[#2d3a2e] mb-2">{product.name}</h2>
-              {product.description && <p className="text-slate-600 text-sm mb-4">{product.description}</p>}
-
-              <div className="bg-slate-50 p-4 rounded-2xl mb-6">
-                <label className="block text-xs font-bold text-slate-700 mb-2">طريقة الاستلام أو التوصيل:</label>
-                <div className="grid grid-cols-2 gap-3">
-                  <button onClick={() => setOrderType('pickup')} className={`p-3 rounded-xl border text-xs font-bold ${orderType === 'pickup' ? 'border-[#3d5a3e] bg-[#3d5a3e]/10 text-[#2d3a2e]' : 'border-slate-200'}`}>
-                    استلام من المتجر ({product.price} ج.م)
-                  </button>
-                  <button onClick={() => setOrderType('delivery')} className={`p-3 rounded-xl border text-xs font-bold ${orderType === 'delivery' ? 'border-[#3d5a3e] bg-[#3d5a3e]/10 text-[#2d3a2e]' : 'border-slate-200'}`}>
-                    توصيل للمنزل (+{deliveryFee} ج.م)
-                  </button>
-                </div>
-              </div>
-
-              <div className="flex justify-between items-center mb-6">
-                <span className="text-sm font-bold text-slate-600">الإجمالي النهائي:</span>
-                <span className="text-2xl font-bold text-[#3d5a3e]">{totalPrice} ج.م</span>
-              </div>
-
-              {user ? (
-                <button onClick={onOpenChat} className="w-full bg-[#2d3a2e] text-white py-3 rounded-xl font-bold text-sm hover:bg-[#3d5a3e]">
-                  {lang === 'ar' ? 'انتقل للشات لإرسال السكرين شوت وتأكيد الطلب' : 'Go to Chat to Send Screenshot & Confirm'}
-                </button>
-              ) : (
-                <p className="text-center text-xs text-red-600 font-bold bg-red-50 p-3 rounded-xl">يرجى تسجيل الدخول أولاً لإتمام الطلب والمراسلة.</p>
-              )}
-            </div>
-          </div>
-        );
-      }
-
-      function ChatView({ user, lang }) {
-        const [messages, setMessages] = useState([]);
-        const [text, setText] = useState('');
-
-        useEffect(() => {
-          const chatRef = window.dbRef(window.db, `chats/${user.uid}`);
-          window.dbOnValue(chatRef, (snapshot) => {
-            const data = snapshot.val() || {};
-            setMessages(Object.keys(data).map(k => ({ id: k, ...data[k] })));
-          });
-        }, [user.uid]);
-
-        const sendMessage = (e) => {
-          e.preventDefault();
-          if (!text.trim()) return;
-          window.dbPush(window.dbRef(window.db, `chats/${user.uid}`), {
-            sender: user.uid,
-            senderName: user.displayName || 'عميل',
-            text,
-            timestamp: Date.now()
-          });
-          setText('');
-        };
-
-        return (
-          <div className="bg-white rounded-3xl shadow-sm border border-slate-200 max-w-3xl mx-auto flex flex-col h-[70vh]">
-            <div className="p-4 border-b bg-slate-50 rounded-t-3xl font-bold text-sm">محادثتك الخاصة مع إدارة أبو صبيح</div>
-            <div className="flex-1 overflow-y-auto p-4 space-y-3">
-              {messages.map(m => (
-                <div key={m.id} className={`flex flex-col ${m.sender === user.uid ? 'items-end' : 'items-start'}`}>
-                  <div className={`p-3 rounded-2xl text-xs max-w-[80%] ${m.sender === user.uid ? 'bg-[#2d3a2e] text-white' : 'bg-slate-100 text-slate-800'}`}>
-                    {m.text}
-                  </div>
-                </div>
-              ))}
-            </div>
-            <form onSubmit={sendMessage} className="p-3 border-t flex gap-2">
-              <input type="text" value={text} onChange={e=>setText(e.target.value)} placeholder="اكتب رسلتك أو رابط السكرين شوت هنا..." className="flex-1 px-4 py-2 border rounded-xl text-xs" />
-              <button type="submit" className="bg-[#2d3a2e] text-white px-5 py-2 rounded-xl text-xs font-bold">إرسال</button>
-            </form>
-          </div>
-        );
-      }
-
-      function AdminPanel({ lang, settings, products, orders }) {
-        const [activeTab, setActiveTab] = useState('products');
-        const [name, setName] = useState('');
-        const [desc, setDesc] = useState('');
-        const [price, setPrice] = useState('');
-        const [img1, setImg1] = useState('');
-        const [img2, setImg2] = useState('');
-        const [img3, setImg3] = useState('');
-        const [img4, setImg4] = useState('');
-        
-        const [deliveryFeeInput, setDeliveryFeeInput] = useState(settings.deliveryFee || 50);
-        const [whatsappInput, setWhatsappInput] = useState(settings.whatsapp || '');
-        const [facebookInput, setFacebookInput] = useState(settings.facebook || '');
-        
-        const [allChats, setAllChats] = useState({});
-        const [selectedChatUser, setSelectedChatUser] = useState(null);
-        const [adminReply, setAdminReply] = useState('');
-
-        useEffect(() => {
-          window.dbOnValue(window.dbRef(window.db, 'chats'), (snapshot) => {
-            setAllChats(snapshot.val() || {});
-          });
-        }, []);
-
-        const addProduct = (e) => {
-          e.preventDefault();
-          if (!name || !price || !img1) return alert("أدخل الاسم والسعر وصورة واحدة على الأقل");
-          window.dbPush(window.dbRef(window.db, 'products'), {
-            name, description: desc, price: Number(price),
-            images: [img1, img2, img3, img4].filter(Boolean),
-            status: 'available', createdAt: Date.now()
-          });
-          setName(''); setDesc(''); setPrice(''); setImg1(''); setImg2(''); setImg3(''); setImg4('');
-          alert("تم إضافة المنتج بنجاح!");
-        };
-
-        const toggleStatus = (id, currentStatus) => {
-          window.dbUpdate(window.dbRef(window.db, `products/${id}`), { status: currentStatus === 'sold' ? 'available' : 'sold' });
-        };
-
-        const deleteProduct = (id) => {
-          if (confirm("هل تريد حذف هذا المنتج؟")) window.dbRemove(window.dbRef(window.db, `products/${id}`));
-        };
-
-        const saveSettings = (e) => {
-          e.preventDefault();
-          window.dbSet(window.dbRef(window.db, 'settings'), {
-            deliveryFee: Number(deliveryFeeInput),
-            whatsapp: whatsappInput,
-            facebook: facebookInput
-          });
-          alert("تم حفظ الإعدادات!");
-        };
-
-        const sendAdminMessage = (e) => {
-          e.preventDefault();
-          if (!adminReply.trim() || !selectedChatUser) return;
-          window.dbPush(window.dbRef(window.db, `chats/${selectedChatUser}`), {
-            sender: 'admin', senderName: 'الأدمن', text: adminReply, timestamp: Date.now()
-          });
-          setAdminReply('');
-        };
-
-        return (
-          <div className="bg-white rounded-3xl p-6 shadow-sm border border-slate-200">
-            <div className="flex gap-3 mb-6 border-b pb-4">
-              <button onClick={() => setActiveTab('products')} className={`px-4 py-2 rounded-xl text-xs font-bold ${activeTab === 'products' ? 'bg-[#2d3a2e] text-white' : 'bg-slate-100'}`}>إدارة المنتجات</button>
-              <button onClick={() => setActiveTab('chats')} className={`px-4 py-2 rounded-xl text-xs font-bold ${activeTab === 'chats' ? 'bg-[#2d3a2e] text-white' : 'bg-slate-100'}`}>محادثات العملاء</button>
-              <button onClick={() => setActiveTab('settings')} className={`px-4 py-2 rounded-xl text-xs font-bold ${activeTab === 'settings' ? 'bg-[#2d3a2e] text-white' : 'bg-slate-100'}`}>الإعدادات والتوصيل</button>
-            </div>
-
-            {activeTab === 'products' && (
-              <div className="grid grid-cols-1 lg:grid-cols-3 gap-6">
-                <form onSubmit={addProduct} className="bg-slate-50 p-4 rounded-2xl space-y-3">
-                  <h3 className="font-bold text-xs">إضافة منتج جديد</h3>
-                  <input type="text" placeholder="اسم المنتج" value={name} onChange={e=>setName(e.target.value)} className="w-full p-2 border rounded-xl text-xs" />
-                  <textarea placeholder="الوصف (اختياري)" value={desc} onChange={e=>setDesc(e.target.value)} className="w-full p-2 border rounded-xl text-xs" rows="2" />
-                  <input type="number" placeholder="السعر" value={price} onChange={e=>setPrice(e.target.value)} className="w-full p-2 border rounded-xl text-xs" />
-                  <input type="text" placeholder="رابط الصورة 1 (إجباري)" value={img1} onChange={e=>setImg1(e.target.value)} className="w-full p-2 border rounded-xl text-xs" />
-                  <input type="text" placeholder="رابط الصورة 2 (اختياري)" value={img2} onChange={e=>setImg2(e.target.value)} className="w-full p-2 border rounded-xl text-xs" />
-                  <input type="text" placeholder="رابط الصورة 3 (اختياري)" value={img3} onChange={e=>setImg3(e.target.value)} className="w-full p-2 border rounded-xl text-xs" />
-                  <input type="text" placeholder="رابط الصورة 4 (اختياري)" value={img4} onChange={e=>setImg4(e.target.value)} className="w-full p-2 border rounded-xl text-xs" />
-                  <button type="submit" className="w-full bg-[#2d3a2e] text-white py-2 rounded-xl text-xs font-bold">إضافة للمتجر</button>
-                </form>
-
-                <div className="lg:col-span-2 space-y-3">
-                  <h3 className="font-bold text-xs">المنتجات الحالية</h3>
-                  {Object.keys(products).map(id => {
-                    const p = products[id];
-                    const isSold = p.status === 'sold';
-                    return (
-                      <div key={id} className="flex items-center justify-between p-3 border rounded-xl bg-white">
-                        <div className="flex items-center gap-3">
-                          <img src={p.images?.[0] || p.image} alt="" className="w-10 h-10 rounded object-cover" />
-                          <div>
-                            <div className="font-bold text-xs">{p.name}</div>
-                            <div className="text-[10px] text-[#3d5a3e]">{p.price} ج.م</div>
-                          </div>
-                        </div>
-                        <div className="flex gap-2">
-                          <button onClick={() => toggleStatus(id, p.status)} className={`px-2 py-1 rounded text-[10px] font-bold ${isSold ? 'bg-red-100 text-red-700' : 'bg-emerald-100 text-emerald-700'}`}>
-                            {isSold ? 'مباع (اجعله متوفر)' : 'متوفر (اجعله مباع)'}
-                          </button>
-                          <button onClick={() => deleteProduct(id)} className="text-red-600 text-[10px] font-bold">حذف</button>
-                        </div>
-                      </div>
-                    );
-                  })}
-                </div>
-              </div>
-            )}
-
-            {activeTab === 'chats' && (
-              <div className="grid grid-cols-1 md:grid-cols-3 gap-4 h-[50vh]">
-                <div className="border rounded-2xl p-3 overflow-y-auto bg-slate-50">
-                  <h4 className="font-bold text-xs mb-3">العملاء</h4>
-                  {Object.keys(allChats).map(uid => (
-                    <button key={uid} onClick={() => setSelectedChatUser(uid)} className={`w-full text-start p-2 rounded-xl mb-1 text-xs ${selectedChatUser === uid ? 'bg-[#2d3a2e] text-white' : 'bg-white border'}`}>
-                      عميل: {uid.slice(0, 6)}...
-                    </button>
-                  ))}
-                </div>
-                <div className="md:col-span-2 border rounded-2xl flex flex-col bg-slate-50">
-                  {selectedChatUser ? (
-                    <>
-                      <div className="p-3 bg-white border-b text-xs font-bold">محادثة العميل</div>
-                      <div className="flex-1 p-3 overflow-y-auto space-y-2">
-                        {Object.values(allChats[selectedChatUser] || {}).map((m, i) => (
-                          <div key={i} className={`flex flex-col ${m.sender === 'admin' ? 'items-end' : 'items-start'}`}>
-                            <div className={`p-2 rounded-xl text-xs max-w-[80%] ${m.sender === 'admin' ? 'bg-[#2d3a2e] text-white' : 'bg-white border'}`}>{m.text}</div>
-                          </div>
-                        ))}
-                      </div>
-                      <form onSubmit={sendAdminMessage} className="p-2 bg-white border-t flex gap-2">
-                        <input type="text" value={adminReply} onChange={e=>setAdminReply(e.target.value)} placeholder="رد الأدمن..." className="flex-1 p-2 border rounded-xl text-xs" />
-                        <button type="submit" className="bg-[#2d3a2e] text-white px-4 py-2 rounded-xl text-xs font-bold">إرسال</button>
-                      </form>
-                    </>
-                  ) : <div className="flex items-center justify-center h-full text-xs text-slate-400">اختر عميلاً</div>}
-                </div>
-              </div>
-            )}
-
-            {activeTab === 'settings' && (
-              <form onSubmit={saveSettings} className="max-w-md space-y-3">
-                <div>
-                  <label className="block text-xs font-bold mb-1">سعر التوصيل (ج.م)</label>
-                  <input type="number" value={deliveryFeeInput} onChange={e=>setDeliveryFeeInput(e.target.value)} className="w-full p-2 border rounded-xl text-xs" />
-                </div>
-                <div>
-                  <label className="block text-xs font-bold mb-1">رابط واتساب</label>
-                  <input type="text" value={whatsappInput} onChange={e=>setWhatsappInput(e.target.value)} className="w-full p-2 border rounded-xl text-xs" />
-                </div>
-                <div>
-                  <label className="block text-xs font-bold mb-1">رابط فيسبوك</label>
-                  <input type="text" value={facebookInput} onChange={e=>setFacebookInput(e.target.value)} className="w-full p-2 border rounded-xl text-xs" />
-                </div>
-                <button type="submit" className="bg-[#2d3a2e] text-white px-5 py-2 rounded-xl text-xs font-bold">حفظ الإعدادات</button>
-              </form>
-            )}
-          </div>
-        );
-      }
-
-      window.addEventListener('firebase-ready', () => {
-        ReactDOM.render(<App />, document.getElementById('root'));
-      });
-    </script>
-  </body>
-</html>
+/* ---------- admin ---------- */
+function adminPage(a){
+  clean();
+  a.innerHTML=`<div class="tabs">${['products','sales','chats','settings'].map(k=>`<button class="${tab===k?'on':''}" onclick="tab='${k}';route()">${t(k)}</button>`).join('')}</div><div id="at"></div>`;
+  ({products:adProducts,sales:adSales,chats:adChats,settings:adSettings})[tab]($('#at'));
+}
+function slots(){return [0,1,2,3].map(i=>`<div class="slot">${draft.imgs[i]?`<img src="${esc(draft.imgs[i])}" alt=""><br><button class="btn sm red" onclick="rmImg(${i})">${t('rm')}</button>`:`<input type="file" accept="image/*" onchange="setImg(${i},this)">`}</div>`).join('')}
+async function setImg(i,el){if(el.files[0]){draft.imgs[i]=await compress(el.files[0]);draft.imgs=draft.imgs.filter(Boolean);$('#sl').innerHTML=slots()}}
+function rmImg(i){draft.imgs.splice(i,1);$('#sl').innerHTML=slots()}
+function adProducts(el){
+  el.innerHTML=`<div class="panel"><label>${t('name')}</label><input id="pn" value="${esc(draft.name)}"><label>${t('pr')} (${t('cur')})</label><input id="pp" type="number" min="0" value="${esc(draft.price)}">
+  <label>${t('desc')}</label><textarea id="pd" rows="3">${esc(draft.description)}</textarea><label>${t('imgs')}</label><div class="slots" id="sl">${slots()}</div><br>
+  <button class="btn acc" onclick="saveProduct()">${t('save')}</button></div>
+  ${products.map(p=>`<div class="panel row"><img src="${esc((p.images||[])[0]||'')}" alt="" style="width:56px;height:56px;object-fit:cover;flex:0 0 56px;border-radius:4px"><span>${esc(p.name)}</span><b>${money(p.price)}</b>
+  <button class="btn sm ghost" onclick="editP('${p.id}')">${t('edit')}</button><button class="btn sm red" onclick="delP('${p.id}')">${t('del')}</button></div>`).join('')}`;
+}
+function editP(id){draft={...products.find(p=>p.id===id),imgs:[...(products.find(p=>p.id===id).images||[])]};route();scrollTo(0,0)}
+async function delP(id){if(confirm(t('confirmDel'))){await db.collection('products').doc(id).delete();adminPage($('#app'))}}
+async function saveProduct(){
+  const d={name:$('#pn').value.trim(),price:Number($('#pp').value),description:$('#pd').value,images:draft.imgs.slice(0,4)};
+  if(!d.name||isNaN(d.price))return;
+  draft.id?await db.collection('products').doc(draft.id).update(d):await db.collection('products').add({...d,createdAt:TS()});
+  draft={imgs:[]};toast(t('saved'));adminPage($('#app'));
+}
+function adSales(el){
+  unsubs.push(db.collection('orders').orderBy('createdAt','desc').onSnapshot(s=>{
+    const os=s.docs.map(d=>({id:d.id,...d.data()})),ok=os.filter(o=>o.status==='paid'||o.status==='delivered');
+    el.innerHTML=`<div class="row"><div class="panel"><div class="muted">${t('revenue')}</div><div class="stat">${money(ok.reduce((a,o)=>a+o.total,0))}</div></div><div class="panel"><div class="muted">${t('orders')}</div><div class="stat">${os.length}</div></div></div>`+
+    os.map(o=>`<div class="panel"><div class="row"><b>#${o.id.slice(0,6)} · ${esc(o.name)}</b><span dir="ltr">${esc(o.phone)}</span><b>${money(o.total)}</b>
+    <select onchange="db.collection('orders').doc('${o.id}').update({status:this.value})" style="max-width:150px">${['new','paid','delivered','cancelled'].map(x=>`<option value="${x}" ${o.status===x?'selected':''}>${t(x)}</option>`).join('')}</select></div>
+    <div class="muted">${o.items.map(i=>`${esc(i.name)} ×${i.q}`).join(', ')}</div><div>${t(o.method)}${o.address?': '+esc(o.address):''}</div></div>`).join('')||`<div class="empty">${t('empty')}</div>`;
+  }));
+}
+let sel=null;
+function adChats(el){
+  el.innerHTML=`<div class="split"><div class="clist" id="cl"></div><div id="cw"><div class="empty">${t('noChat')}</div></div></div>`;
+  unsubs.push(db.collection('chats').orderBy('updatedAt','desc').onSnapshot(s=>{
+    const l=$('#cl');if(!l)return;
+    l.innerHTML=s.docs.map(d=>{const c=d.data();return `<button class="${sel===d.id?'on':''}" onclick="openChat('${d.id}')"><b>${esc(c.name||d.id)}</b><small>${esc(c.last)}</small></button>`}).join('');
+  }));
+  if(sel)openChat(sel,true);
+}
+let chatUnsub=null;
+function openChat(uid,keep){sel=uid;if(chatUnsub){chatUnsub();unsubs=unsubs.filter(u=>u!==chatUnsub)}const n=unsubs.length;chatUI($('#cw'),uid,'admin');chatUnsub=unsubs[unsubs.length-1];document.querySelectorAll('.clist button').forEach(b=>b.classList.toggle('on',b.getAttribute('onclick').includes(uid)))}
+function adSettings(el){
+  const s=settings.social||{};
+  el.innerHTML=`<div class="panel"><label>${t('fee')} (${t('cur')})</label><input id="sf" type="number" min="0" value="${esc(settings.deliveryFee)}">
+  <label>${t('payInfo')}</label><textarea id="sp" rows="3">${esc(settings.payInfo)}</textarea><h3>${t('social')}</h3>
+  ${['whatsapp','facebook','instagram','tiktok','youtube'].map(k=>`<label>${k}</label><input id="s_${k}" dir="ltr" placeholder="${k==='whatsapp'?'+20 100 000 0000':'https://'}" value="${esc(s[k])}">`).join('')}<br>
+  <button class="btn acc" onclick="saveSettings()">${t('saveSet')}</button></div>`;
+}
+async function saveSettings(){
+  const social={};['whatsapp','facebook','instagram','tiktok','youtube'].forEach(k=>social[k]=$('#s_'+k).value.trim());
+  await db.doc('settings/store').set({deliveryFee:Number($('#sf').value)||0,payInfo:$('#sp').value,social},{merge:true});toast(t('saved'));
+}
+head();route();
+</script></body></html>
