@@ -48,6 +48,14 @@ footer{background:var(--ink);color:#fff;padding:20px;text-align:center}footer a{
 .muted{color:var(--mute)}.empty{padding:40px;text-align:center;color:var(--mute)}
 #toast{position:fixed;bottom:20px;inset-inline-start:20px;background:var(--ink);color:#fff;padding:10px 16px;border-radius:var(--r);display:none;z-index:9}
 @media(prefers-reduced-motion:no-preference){.hero h1{animation:in .6s ease-out}@keyframes in{from{opacity:0;transform:translateY(14px)}}}
+.soc{display:flex;justify-content:center;gap:12px;flex-wrap:wrap}
+.soc a{display:grid;place-items:center;width:46px;height:46px;border-radius:50%;border:1.5px solid #ffffff55;color:#fff;margin:0;transition:transform .25s,background .25s,color .25s,border-color .25s}
+.soc a:hover,.soc a:focus-visible{transform:translateY(-5px) scale(1.12) rotate(-6deg);background:var(--acc);color:var(--ink);border-color:var(--acc)}
+.soc a:hover svg{animation:wig .5s}@keyframes wig{50%{transform:scale(1.2)}}
+.pay{background:#fff7e0;border:1px solid var(--acc);border-radius:var(--r);padding:12px;margin:10px 0}
+@media(prefers-reduced-motion:no-preference){.pg{animation:pg .35s ease-out}@keyframes pg{from{opacity:0;transform:translateY(12px)}}}
+@media(min-width:561px) and (max-width:900px){main{padding:20px 16px 50px}.grid{grid-template-columns:repeat(auto-fill,minmax(200px,1fr))}}
+@media(max-width:560px){header{gap:6px;padding:8px 12px}main{padding:16px 12px 40px}.slots{grid-template-columns:repeat(2,1fr)}.msg{max-width:90%}.hero{padding-inline-start:14px}.chatbox{height:55vh}}
 </style></head><body>
 <header id="hd"></header><main id="app"></main><footer id="ft"></footer><div id="toast"></div>
 
@@ -55,18 +63,18 @@ footer{background:var(--ink);color:#fff;padding:20px;text-align:center}footer a{
 <script src="https://cdnjs.cloudflare.com/ajax/libs/firebase/10.12.2/firebase-auth-compat.min.js"></script>
 <script src="https://cdnjs.cloudflare.com/ajax/libs/firebase/10.12.2/firebase-firestore-compat.min.js"></script>
 <script>
-/* ===== CONFIG ===== */
+/* ===== 1. CONFIG: paste your Firebase web-app config and admin Gmail(s) ===== */
 const CONFIG={
   firebase:{apiKey:"AIzaSyBMpZ7CXOJbgKpMqOjzsbbCcpHBlslU3mw",authDomain:"salah-52496.firebaseapp.com",projectId:"salah-52496",storageBucket:"salah-52496.firebasestorage.app",messagingSenderId:"235427387836",appId:"1:235427387836:web:7071be59b9ec8c2203f3b9"},
   admins:["salaheldeen982@gmail.com"]
 };
-/* ================== */
+/* ========================================================================== */
 firebase.initializeApp(CONFIG.firebase);
 const auth=firebase.auth(),db=firebase.firestore(),TS=()=>firebase.firestore.FieldValue.serverTimestamp();
 
-const T={en:{shop:'Shop',chat:'Messages',admin:'Dashboard',login:'Sign in with Google',logout:'Sign out',tag:'Equipment you can count on. Order online, pick up or get it delivered.',cur:'EGP',add:'Add to cart',cart:'Cart',empty:'Nothing here yet.',pickup:'Pickup from store',delivery:'Home delivery',addr:'Delivery address',phone:'Phone number',sub:'Subtotal',fee:'Delivery fee',total:'Total',place:'Place order',needLogin:'Sign in to continue.',ordered:'Order placed. Send your payment proof here.',send:'Send',msg:'Type a message',proof:'Attach payment proof',products:'Products',sales:'Sales',chats:'Chats',settings:'Settings',name:'Name',desc:'Description',pr:'Price',imgs:'Images (up to 4)',save:'Save product',edit:'Edit',del:'Delete',rm:'Remove',saved:'Saved',confirmDel:'Delete this item?',revenue:'Revenue',orders:'Orders',status:'Status',new:'New',paid:'Paid',delivered:'Delivered',cancelled:'Cancelled',payInfo:'Payment instructions (shown to customers)',social:'Social links',saveSet:'Save settings',noChat:'Select a conversation.',method:'Receiving method',back:'Back to shop',needAddr:'Enter address and phone.',qty:'Qty'},
-ar:{shop:'المتجر',chat:'الرسائل',admin:'لوحة التحكم',login:'الدخول بحساب جوجل',logout:'تسجيل الخروج',tag:'معدات تعتمد عليها. اطلب أونلاين، واستلم من المتجر أو بالتوصيل لباب البيت.',cur:'ج.م',add:'أضف للسلة',cart:'السلة',empty:'لا يوجد شيء بعد.',pickup:'استلام من المتجر',delivery:'توصيل للمنزل',addr:'عنوان التوصيل',phone:'رقم الهاتف',sub:'المجموع الفرعي',fee:'رسوم التوصيل',total:'الإجمالي',place:'إتمام الطلب',needLogin:'سجّل الدخول للمتابعة.',ordered:'تم إرسال الطلب. أرسل إثبات الدفع هنا.',send:'إرسال',msg:'اكتب رسالة',proof:'إرفاق إثبات الدفع',products:'المنتجات',sales:'المبيعات',chats:'المحادثات',settings:'الإعدادات',name:'الاسم',desc:'الوصف',pr:'السعر',imgs:'الصور (حتى 4)',save:'حفظ المنتج',edit:'تعديل',del:'حذف',rm:'إزالة',saved:'تم الحفظ',confirmDel:'حذف هذا العنصر؟',revenue:'الإيرادات',orders:'الطلبات',status:'الحالة',new:'جديد',paid:'مدفوع',delivered:'تم التسليم',cancelled:'ملغي',payInfo:'تعليمات الدفع (تظهر للعملاء)',social:'روابط التواصل',saveSet:'حفظ الإعدادات',noChat:'اختر محادثة.',method:'طريقة الاستلام',back:'العودة للمتجر',needAddr:'أدخل العنوان ورقم الهاتف.',qty:'الكمية'}};
-let lang=localStorage.lang||'ar',user=null,isAdmin=false,products=[],settings={deliveryFee:0,social:{},payInfo:''},cart=JSON.parse(localStorage.cart||'[]'),tab='products',unsubs=[],draft={imgs:[]},method='pickup';
+const T={en:{shop:'Shop',chat:'Messages',admin:'Dashboard',login:'Sign in with Google',logout:'Sign out',tag:'Equipment you can count on. Order online, pick up or get it delivered.',cur:'EGP',add:'Add to cart',cart:'Cart',empty:'Nothing here yet.',pickup:'Pickup from store',delivery:'Home delivery',addr:'Delivery address',phone:'Phone number',sub:'Subtotal',fee:'Delivery fee',total:'Total',place:'Place order',needLogin:'Sign in to continue.',ordered:'Order placed. Send your payment proof here.',send:'Send',msg:'Type a message',proof:'Attach payment proof',products:'Products',sales:'Sales',chats:'Chats',settings:'Settings',name:'Name',desc:'Description',pr:'Price',imgs:'Images (up to 4)',save:'Save product',edit:'Edit',del:'Delete',rm:'Remove',saved:'Saved',confirmDel:'Delete this item?',revenue:'Revenue',orders:'Orders',status:'Status',new:'New',paid:'Paid',delivered:'Delivered',cancelled:'Cancelled',payInfo:'Payment instructions (shown to customers)',social:'Social links',saveSet:'Save settings',noChat:'Select a conversation.',method:'Receiving method',back:'Back to shop',needAddr:'Enter address and phone.',qty:'Qty',payNow:'Pay via Vodafone Cash or InstaPay on this number',payMode:'Payment',payOnline:'Pay online (wallet / InstaPay)',payStore:'Pay at the store',needProof:'Attach your payment screenshot first.',proofLbl:'Payment screenshot (required)',sendLoc:'Send my location to admin',locSent:'Location ready ✓',locFail:'Could not get your location. Allow location access and try again.',delNote:'Delivery fee is agreed with the admin in chat.',storeLoc:'Store location',mapUrl:'Store location link (Google Maps)',payNumber:'Payment number (wallet / InstaPay)',payMethods:'Payment methods (e.g. Vodafone Cash / InstaPay)',payStoreNote:'Visit the store to pay and collect your order.',openMap:'View store location',wait:'Saving…'},
+ar:{shop:'المتجر',chat:'الرسائل',admin:'لوحة التحكم',login:'الدخول بحساب جوجل',logout:'تسجيل الخروج',tag:'معدات تعتمد عليها. اطلب أونلاين، واستلم من المتجر أو بالتوصيل لباب البيت.',cur:'ج.م',add:'أضف للسلة',cart:'السلة',empty:'لا يوجد شيء بعد.',pickup:'استلام من المتجر',delivery:'توصيل للمنزل',addr:'عنوان التوصيل',phone:'رقم الهاتف',sub:'المجموع الفرعي',fee:'رسوم التوصيل',total:'الإجمالي',place:'إتمام الطلب',needLogin:'سجّل الدخول للمتابعة.',ordered:'تم إرسال الطلب. أرسل إثبات الدفع هنا.',send:'إرسال',msg:'اكتب رسالة',proof:'إرفاق إثبات الدفع',products:'المنتجات',sales:'المبيعات',chats:'المحادثات',settings:'الإعدادات',name:'الاسم',desc:'الوصف',pr:'السعر',imgs:'الصور (حتى 4)',save:'حفظ المنتج',edit:'تعديل',del:'حذف',rm:'إزالة',saved:'تم الحفظ',confirmDel:'حذف هذا العنصر؟',revenue:'الإيرادات',orders:'الطلبات',status:'الحالة',new:'جديد',paid:'مدفوع',delivered:'تم التسليم',cancelled:'ملغي',payInfo:'تعليمات الدفع (تظهر للعملاء)',social:'روابط التواصل',saveSet:'حفظ الإعدادات',noChat:'اختر محادثة.',method:'طريقة الاستلام',back:'العودة للمتجر',needAddr:'أدخل العنوان ورقم الهاتف.',qty:'الكمية',payNow:'ادفع عن طريق فودافون كاش أو إنستاباي على الرقم',payMode:'طريقة الدفع',payOnline:'دفع أونلاين (محفظة / إنستاباي)',payStore:'الدفع في المتجر',needProof:'أرفق سكرين شوت الدفع أولاً.',proofLbl:'سكرين شوت الدفع (إجباري)',sendLoc:'أرسل موقعي للأدمن',locSent:'تم تحديد موقعك ✓',locFail:'تعذر تحديد موقعك. اسمح بالوصول للموقع وحاول تاني.',delNote:'رسوم التوصيل بتتحدد مع الأدمن في الشات.',storeLoc:'موقع المتجر',mapUrl:'رابط موقع المتجر (خرائط جوجل)',payNumber:'رقم الدفع (محفظة / إنستاباي)',payMethods:'طرق الدفع (مثال: فودافون كاش / إنستاباي)',payStoreNote:'تعالَ المتجر وادفع واستلم طلبك.',openMap:'شوف موقع المتجر',wait:'جارٍ الحفظ…'}};
+let lang=localStorage.lang||'ar',user=null,isAdmin=false,products=[],settings={social:{},payInfo:'',payNumber:'',payMethods:'',mapUrl:''},cart=JSON.parse(localStorage.cart||'[]'),tab='products',unsubs=[],draft={imgs:[]},method='pickup';
 const t=k=>T[lang][k]||k,$=s=>document.querySelector(s);
 const esc=s=>String(s??'').replace(/[&<>"']/g,c=>({'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;',"'":'&#39;'}[c]));
 const money=n=>Number(n||0).toLocaleString(lang==='ar'?'ar-EG':'en-US')+' '+t('cur');
@@ -74,8 +82,11 @@ const toast=m=>{const e=$('#toast');e.textContent=m;e.style.display='block';setT
 const clean=()=>{unsubs.forEach(u=>u());unsubs=[]};
 const saveCart=()=>{localStorage.cart=JSON.stringify(cart);head()};
 const safeUrl=u=>/^https?:\/\//i.test(u||'')?u:'';
+const link=s=>s.replace(/(https?:\/\/[^\s<]+)/g,'<a href="$1" target="_blank" rel="noopener" style="color:inherit;text-decoration:underline">$1</a>');
 function compress(file,max=800){return new Promise(res=>{const r=new FileReader();r.onload=()=>{const i=new Image();i.onload=()=>{const s=Math.min(1,max/Math.max(i.width,i.height)),c=document.createElement('canvas');c.width=i.width*s;c.height=i.height*s;c.getContext('2d').drawImage(i,0,0,c.width,c.height);res(c.toDataURL('image/jpeg',.7))};i.src=r.result};r.readAsDataURL(file)})}
 
+const sv=(b,f)=>`<svg viewBox="0 0 24 24" width="22" height="22" fill="${f?'currentColor':'none'}" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true">${b}</svg>`;
+const ICON={whatsapp:sv('<path d="M3 21l1.6-4.6A9 9 0 1 1 8 19.6z"/><path d="M9 8.5c0 3.5 3 6.5 6.5 6.5l1-1.8-2-1-1 1c-1-.4-2.2-1.7-2.6-2.6l1-1-1-2z"/>'),facebook:sv('<path d="M14 8h3V4h-3c-2.8 0-4 1.8-4 4v2H7v4h3v8h4v-8h3l1-4h-4V8.5c0-.3.2-.5.5-.5z"/>',1),instagram:sv('<rect x="3" y="3" width="18" height="18" rx="5"/><circle cx="12" cy="12" r="4"/><circle cx="17.5" cy="6.5" r=".8" fill="currentColor"/>'),tiktok:sv('<path d="M14 3v11.5a3.5 3.5 0 1 1-3-3.4"/><path d="M14 3c.4 2.6 2 4.2 5 4.5"/>'),youtube:sv('<rect x="2.5" y="5.5" width="19" height="13" rx="4"/><path d="M10 9l5 3-5 3z" fill="currentColor"/>'),pin:sv('<path d="M12 22s7-6.2 7-12a7 7 0 1 0-14 0c0 5.8 7 12 7 12z"/><circle cx="12" cy="10" r="2.5"/>')};
 /* ---------- shell ---------- */
 function head(){
   document.documentElement.lang=lang;document.documentElement.dir=lang==='ar'?'rtl':'ltr';
@@ -85,19 +96,22 @@ function head(){
   <button onclick="setLang()">${lang==='ar'?'English':'العربية'}</button>
   ${user?`<img class="avatar" src="${esc(user.photoURL)}" alt=""><button onclick="auth.signOut()">${t('logout')}</button>`:`<button onclick="login()">${t('login')}</button>`}`;
   const s=settings.social||{},L=[];
-  if(s.whatsapp)L.push(['WhatsApp','https://wa.me/'+String(s.whatsapp).replace(/\D/g,'')]);
-  ['facebook','instagram','tiktok','youtube'].forEach(k=>s[k]&&safeUrl(s[k])&&L.push([k[0].toUpperCase()+k.slice(1),s[k]]));
-  $('#ft').innerHTML=L.map(([n,u])=>`<a href="${esc(u)}" target="_blank" rel="noopener">${n}</a>`).join('')+`<div class="muted" style="margin-top:8px">© Abosabeh</div>`;
+  if(s.whatsapp)L.push(['whatsapp','WhatsApp','https://wa.me/'+String(s.whatsapp).replace(/\D/g,'')]);
+  ['facebook','instagram','tiktok','youtube'].forEach(k=>safeUrl(s[k])&&L.push([k,k,s[k]]));
+  if(safeUrl(settings.mapUrl))L.push(['pin',t('storeLoc'),settings.mapUrl]);
+  $('#ft').innerHTML=`<div class="soc">`+L.map(([i,n,u])=>`<a href="${esc(u)}" target="_blank" rel="noopener" aria-label="${esc(n)}" title="${esc(n)}">${ICON[i]}</a>`).join('')+`</div><div class="muted" style="margin-top:10px">© Abosabeh</div>`;
 }
 function setLang(){lang=lang==='ar'?'en':'ar';localStorage.lang=lang;head();route()}
 function login(){auth.signInWithPopup(new firebase.auth.GoogleAuthProvider()).catch(e=>toast(e.message))}
 auth.onAuthStateChanged(u=>{user=u;isAdmin=!!u&&CONFIG.admins.includes(u.email);head();route()});
 db.collection('products').orderBy('createdAt','desc').onSnapshot(s=>{products=s.docs.map(d=>({id:d.id,...d.data()}));if(/^(#?|#p\/.*|#cart)$/.test(location.hash))route()});
-db.doc('settings/store').onSnapshot(s=>{settings={deliveryFee:0,social:{},payInfo:'',...(s.data()||{})};head();if(location.hash==='#cart')route()});
+db.doc('settings/store').onSnapshot(s=>{settings={social:{},payInfo:'',payNumber:'',payMethods:'',mapUrl:'',...(s.data()||{})};head();if(location.hash==='#cart')keep();if(/^(#?|#cart)$/.test(location.hash))route()});
 window.onhashchange=route;
 
+let lastH=null;
 function route(){
   clean();const h=location.hash,a=$('#app');
+  if(h!==lastH){lastH=h;a.classList.remove('pg');void a.offsetWidth;a.classList.add('pg')}
   if(h.startsWith('#p/'))return product(a,h.slice(3));
   if(h==='#cart')return cartView(a);
   if(h==='#chat')return user?chatPage(a):need(a);
@@ -108,7 +122,7 @@ const need=a=>a.innerHTML=`<div class="empty">${t('needLogin')}<br><br><button c
 
 /* ---------- storefront ---------- */
 function shop(a){
-  a.innerHTML=`<section class="hero"><h1>Abosabeh</h1><p>${t('tag')}</p></section>
+  a.innerHTML=`<section class="hero"><h1>Abosabeh</h1><p>${t('tag')}</p>${safeUrl(settings.mapUrl)?`<p style="margin-top:14px"><a class="btn ghost" href="${esc(settings.mapUrl)}" target="_blank" rel="noopener">📍 ${t('openMap')}</a></p>`:''}</section>
   <div class="grid">${products.map(p=>`<a class="card" href="#p/${p.id}"><img src="${esc((p.images||[])[0]||'')}" alt="${esc(p.name)}"><div class="b"><h3>${esc(p.name)}</h3><span class="price">${money(p.price)}</span></div></a>`).join('')||`<div class="empty">${t('empty')}</div>`}</div>`;
 }
 function product(a,id){
@@ -121,31 +135,48 @@ function product(a,id){
 }
 function addCart(id){const c=cart.find(x=>x.id===id);c?c.q++:cart.push({id,q:1});saveCart();toast(t('saved'))}
 function qty(id,d){const c=cart.find(x=>x.id===id);c.q+=d;if(c.q<1)cart=cart.filter(x=>x!==c);saveCart();route()}
-function cartCalc(){const items=cart.map(c=>({...c,p:products.find(p=>p.id===c.id)})).filter(c=>c.p);const sub=items.reduce((a,c)=>a+c.p.price*c.q,0),fee=method==='delivery'?Number(settings.deliveryFee||0):0;return{items,sub,fee,total:sub+fee}}
+let payMode='online',loc='',form={ad:'',ph:''},placing=false;
+function keep(){form.ad=($('#ad')||{}).value??form.ad;form.ph=($('#ph')||{}).value??form.ph}
+function cartCalc(){const items=cart.map(c=>({...c,p:products.find(p=>p.id===c.id)})).filter(c=>c.p);const sub=items.reduce((a,c)=>a+c.p.price*c.q,0);return{items,sub,total:sub}}
+function getLoc(){if(!navigator.geolocation)return toast(t('locFail'));navigator.geolocation.getCurrentPosition(p=>{loc=`https://www.google.com/maps?q=${p.coords.latitude},${p.coords.longitude}`;$('#ls').textContent=t('locSent')},()=>toast(t('locFail')))}
 function cartView(a){
   const k=cartCalc();
   if(!k.items.length)return a.innerHTML=`<div class="empty">${t('empty')}</div>`;
+  if(method==='delivery')payMode='online';
+  const online=payMode==='online',del=method==='delivery';
   a.innerHTML=`<h1>${t('cart')}</h1><div class="panel">${k.items.map(c=>`<div class="row" style="margin-bottom:8px"><span>${esc(c.p.name)}</span><span>${money(c.p.price)}</span>
-  <span><button class="btn sm ghost" onclick="qty('${c.id}',-1)">−</button> ${c.q} <button class="btn sm ghost" onclick="qty('${c.id}',1)">+</button></span></div>`).join('')}</div>
+  <span><button class="btn sm ghost" onclick="keep();qty('${c.id}',-1)">−</button> ${c.q} <button class="btn sm ghost" onclick="keep();qty('${c.id}',1)">+</button></span></div>`).join('')}</div>
   <div class="panel"><b>${t('method')}</b>
-  <label><input type="radio" name="m" style="width:auto" ${method==='pickup'?'checked':''} onchange="method='pickup';route()"> ${t('pickup')}</label>
-  <label><input type="radio" name="m" style="width:auto" ${method==='delivery'?'checked':''} onchange="method='delivery';route()"> ${t('delivery')} (${money(settings.deliveryFee)})</label>
-  <div id="dl" ${method==='delivery'?'':'hidden'}><label>${t('addr')}</label><textarea id="ad" rows="2"></textarea></div>
-  <label>${t('phone')}</label><input id="ph" type="tel" dir="ltr"></div>
-  <div class="panel"><div class="row"><span>${t('sub')}</span><b>${money(k.sub)}</b></div><div class="row"><span>${t('fee')}</span><b>${money(k.fee)}</b></div>
-  <div class="row"><span>${t('total')}</span><b class="stat">${money(k.total)}</b></div>
-  ${settings.payInfo?`<p class="muted" style="white-space:pre-wrap">${esc(settings.payInfo)}</p>`:''}
-  <button class="btn acc" onclick="placeOrder()">${t('place')}</button></div>`;
+  <label><input type="radio" name="m" style="width:auto" ${del?'':'checked'} onchange="keep();method='pickup';route()"> ${t('pickup')}</label>
+  <label><input type="radio" name="m" style="width:auto" ${del?'checked':''} onchange="keep();method='delivery';route()"> ${t('delivery')}</label>
+  ${del?`<label>${t('addr')}</label><textarea id="ad" rows="2">${esc(form.ad)}</textarea>
+  <p><button type="button" class="btn ghost" onclick="getLoc()">📍 ${t('sendLoc')}</button> <span id="ls" class="muted">${loc?t('locSent'):''}</span></p><p class="muted">${t('delNote')}</p>`:''}
+  <label>${t('phone')}</label><input id="ph" type="tel" dir="ltr" value="${esc(form.ph)}"></div>
+  <div class="panel"><b>${t('payMode')}</b>
+  <label><input type="radio" name="pm" style="width:auto" ${online?'checked':''} onchange="keep();payMode='online';route()"> ${t('payOnline')}</label>
+  ${del?'':`<label><input type="radio" name="pm" style="width:auto" ${online?'':'checked'} onchange="keep();payMode='store';route()"> ${t('payStore')}</label>`}
+  ${online?`<div class="pay">${t('payNow')}:<br><b dir="ltr" style="font-size:1.4rem">${esc(settings.payNumber)}</b><div class="muted">${esc(settings.payMethods)}</div>${settings.payInfo?`<div style="white-space:pre-wrap">${esc(settings.payInfo)}</div>`:''}</div>
+  <label>${t('proofLbl')}</label><input id="pf" type="file" accept="image/*">`
+  :`<div class="pay">${t('payStoreNote')}${safeUrl(settings.mapUrl)?`<p><a class="btn ghost" href="${esc(settings.mapUrl)}" target="_blank" rel="noopener">📍 ${t('openMap')}</a></p>`:''}</div>`}</div>
+  <div class="panel"><div class="row"><span>${t('total')}</span><b class="stat">${money(k.total)}</b></div>
+  <button class="btn acc" id="po" onclick="placeOrder()">${t('place')}</button></div>`;
 }
 async function placeOrder(){
+  if(placing)return;
   if(!user)return toast(t('needLogin'));
-  const ad=($('#ad')||{}).value||'',ph=$('#ph').value.trim();
-  if(!ph||(method==='delivery'&&!ad.trim()))return toast(t('needAddr'));
-  const k=cartCalc(),items=k.items.map(c=>({name:c.p.name,price:c.p.price,q:c.q}));
-  const o=await db.collection('orders').add({uid:user.uid,name:user.displayName,email:user.email,items,method,address:ad,phone:ph,subtotal:k.sub,fee:k.fee,total:k.total,status:'new',createdAt:TS()});
-  const text=`#${o.id.slice(0,6)} — `+items.map(i=>`${i.name} ×${i.q}`).join(', ')+`\n${t('total')}: ${money(k.total)} (${t(method)})`;
-  await sendMsg(user.uid,{from:'user',text});
-  cart=[];saveCart();toast(t('ordered'));location.hash='#chat';
+  keep();const ad=form.ad,ph=form.ph.trim(),del=method==='delivery',online=del||payMode==='online',pf=$('#pf')&&$('#pf').files[0];
+  if(!ph||(del&&!ad.trim()))return toast(t('needAddr'));
+  if(online&&!pf)return toast(t('needProof'));
+  placing=true;$('#po').disabled=true;
+  try{
+    const k=cartCalc(),items=k.items.map(c=>({name:c.p.name,price:c.p.price,q:c.q}));
+    const proof=online?await compress(pf,1000):'';
+    const o=await db.collection('orders').add({uid:user.uid,name:user.displayName,email:user.email,items,method,payMode:online?'online':'store',address:ad,location:loc,phone:ph,subtotal:k.sub,fee:0,total:k.total,status:'new',createdAt:TS()});
+    const text=`#${o.id.slice(0,6)} — `+items.map(i=>`${i.name} ×${i.q}`).join(', ')+`\n${t('total')}: ${money(k.total)}\n${t(method)} · ${online?t('payOnline'):t('payStore')}\n${ph}`+(ad?`\n${ad}`:'')+(loc?`\n📍 ${loc}`:'');
+    await sendMsg(user.uid,{from:'user',text});
+    if(proof)await sendMsg(user.uid,{from:'user',img:proof});
+    cart=[];form={ad:'',ph:''};loc='';saveCart();toast(t('ordered'));location.hash='#chat';
+  }catch(e){toast(e.message)}finally{placing=false}
 }
 
 /* ---------- private chat ---------- */
@@ -164,7 +195,7 @@ function chatUI(el,uid,from){
   $('#cf').onchange=async e=>{const f=e.target.files[0];if(f)await sendMsg(uid,{from,img:await compress(f,1000)})};
   unsubs.push(db.collection('chats').doc(uid).collection('messages').orderBy('at').onSnapshot(s=>{
     const b=$('#cb');if(!b)return;
-    b.innerHTML=s.docs.map(d=>{const m=d.data();return `<div class="msg ${m.from===from?'me':''}">${esc(m.text||'').replace(/\n/g,'<br>')}${m.img?`<img src="${esc(m.img)}" alt="" onclick="window.open(this.src)">`:''}</div>`}).join('');
+    b.innerHTML=s.docs.map(d=>{const m=d.data();return `<div class="msg ${m.from===from?'me':''}">${link(esc(m.text||'')).replace(/\n/g,'<br>')}${m.img?`<img src="${esc(m.img)}" alt="" onclick="window.open(this.src)">`:''}</div>`}).join('');
     b.scrollTop=b.scrollHeight}));
 }
 function chatPage(a){a.innerHTML=`<h1>${t('chat')}</h1><div id="cw"></div>`;chatUI($('#cw'),user.uid,'user')}
@@ -181,17 +212,22 @@ function rmImg(i){draft.imgs.splice(i,1);$('#sl').innerHTML=slots()}
 function adProducts(el){
   el.innerHTML=`<div class="panel"><label>${t('name')}</label><input id="pn" value="${esc(draft.name)}"><label>${t('pr')} (${t('cur')})</label><input id="pp" type="number" min="0" value="${esc(draft.price)}">
   <label>${t('desc')}</label><textarea id="pd" rows="3">${esc(draft.description)}</textarea><label>${t('imgs')}</label><div class="slots" id="sl">${slots()}</div><br>
-  <button class="btn acc" onclick="saveProduct()">${t('save')}</button></div>
+  <button class="btn acc" id="sv" onclick="saveProduct()">${t('save')}</button></div>
   ${products.map(p=>`<div class="panel row"><img src="${esc((p.images||[])[0]||'')}" alt="" style="width:56px;height:56px;object-fit:cover;flex:0 0 56px;border-radius:4px"><span>${esc(p.name)}</span><b>${money(p.price)}</b>
   <button class="btn sm ghost" onclick="editP('${p.id}')">${t('edit')}</button><button class="btn sm red" onclick="delP('${p.id}')">${t('del')}</button></div>`).join('')}`;
 }
 function editP(id){draft={...products.find(p=>p.id===id),imgs:[...(products.find(p=>p.id===id).images||[])]};route();scrollTo(0,0)}
 async function delP(id){if(confirm(t('confirmDel'))){await db.collection('products').doc(id).delete();adminPage($('#app'))}}
+let saving=false;
 async function saveProduct(){
+  if(saving)return;
   const d={name:$('#pn').value.trim(),price:Number($('#pp').value),description:$('#pd').value,images:draft.imgs.slice(0,4)};
   if(!d.name||isNaN(d.price))return;
-  draft.id?await db.collection('products').doc(draft.id).update(d):await db.collection('products').add({...d,createdAt:TS()});
-  draft={imgs:[]};toast(t('saved'));adminPage($('#app'));
+  saving=true;const bt=$('#sv');if(bt){bt.disabled=true;bt.textContent=t('wait')}
+  try{draft.id?await db.collection('products').doc(draft.id).update(d):await db.collection('products').add({...d,createdAt:TS()});
+    draft={imgs:[]};toast(t('saved'));adminPage($('#app'))}
+  catch(e){toast(e.message);if(bt){bt.disabled=false;bt.textContent=t('save')}}
+  finally{saving=false}
 }
 function adSales(el){
   unsubs.push(db.collection('orders').orderBy('createdAt','desc').onSnapshot(s=>{
@@ -215,14 +251,16 @@ let chatUnsub=null;
 function openChat(uid,keep){sel=uid;if(chatUnsub){chatUnsub();unsubs=unsubs.filter(u=>u!==chatUnsub)}const n=unsubs.length;chatUI($('#cw'),uid,'admin');chatUnsub=unsubs[unsubs.length-1];document.querySelectorAll('.clist button').forEach(b=>b.classList.toggle('on',b.getAttribute('onclick').includes(uid)))}
 function adSettings(el){
   const s=settings.social||{};
-  el.innerHTML=`<div class="panel"><label>${t('fee')} (${t('cur')})</label><input id="sf" type="number" min="0" value="${esc(settings.deliveryFee)}">
+  el.innerHTML=`<div class="panel"><label>${t('mapUrl')}</label><input id="sm" dir="ltr" placeholder="https://maps.google.com/..." value="${esc(settings.mapUrl)}">
+  <label>${t('payNumber')}</label><input id="sn" dir="ltr" value="${esc(settings.payNumber)}">
+  <label>${t('payMethods')}</label><input id="sy" value="${esc(settings.payMethods)}">
   <label>${t('payInfo')}</label><textarea id="sp" rows="3">${esc(settings.payInfo)}</textarea><h3>${t('social')}</h3>
   ${['whatsapp','facebook','instagram','tiktok','youtube'].map(k=>`<label>${k}</label><input id="s_${k}" dir="ltr" placeholder="${k==='whatsapp'?'+20 100 000 0000':'https://'}" value="${esc(s[k])}">`).join('')}<br>
   <button class="btn acc" onclick="saveSettings()">${t('saveSet')}</button></div>`;
 }
 async function saveSettings(){
   const social={};['whatsapp','facebook','instagram','tiktok','youtube'].forEach(k=>social[k]=$('#s_'+k).value.trim());
-  await db.doc('settings/store').set({deliveryFee:Number($('#sf').value)||0,payInfo:$('#sp').value,social},{merge:true});toast(t('saved'));
+  await db.doc('settings/store').set({mapUrl:$('#sm').value.trim(),payNumber:$('#sn').value.trim(),payMethods:$('#sy').value.trim(),payInfo:$('#sp').value,social},{merge:true});toast(t('saved'));
 }
 head();route();
 </script></body></html>
