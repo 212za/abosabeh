@@ -143,7 +143,7 @@
         const [lang, setLang] = useState('ar');
         const [user, setUser] = useState(null);
         const [isAdmin, setIsAdmin] = useState(false);
-        const [currentView, setCurrentView] = useState('shop'); // shop, admin, chat
+        const [currentView, setCurrentView] = useState('shop');
         
         const [products, setProducts] = useState({});
         const [settings, setSettings] = useState({ deliveryFee: 50, whatsapp: '', facebook: '' });
@@ -203,22 +203,23 @@
 
         const scrollToSales = () => {
           setCurrentView('shop');
-          const element = document.getElementById('sales-section');
-          if (element) {
-            element.scrollIntoView({ behavior: 'smooth' });
-          }
+          setTimeout(() => {
+            const element = document.getElementById('sales-section');
+            if (element) {
+              element.scrollIntoView({ behavior: 'smooth' });
+            }
+          }, 100);
         };
 
         const t = translations[lang];
 
         return (
           <div className="min-h-screen bg-[#faf8f5] text-[#2d3a2e]" dir={lang === 'ar' ? 'rtl' : 'ltr'}>
-            {/* شريط التنقل العلوي بطراز بوليمر */}
+            {/* شريط التنقل العلوي */}
             <header className="fixed top-0 left-0 right-0 z-50 bg-[#faf8f5]/90 backdrop-blur-md shadow-sm">
               <div className="max-w-7xl mx-auto px-6 lg:px-8">
                 <div className="relative flex items-center h-16 md:h-20 justify-between">
                   
-                  {/* الروابط اليسرى/اليمنى حسب اللغة */}
                   <nav className="hidden md:flex items-center gap-8">
                     <button
                       onClick={() => setCurrentView('shop')}
@@ -240,7 +241,6 @@
                     </button>
                   </nav>
 
-                  {/* الشعار في المنتصف */}
                   <div 
                     onClick={() => setCurrentView('shop')}
                     className="absolute left-1/2 -translate-x-1/2 flex items-center gap-2 select-none cursor-pointer"
@@ -251,7 +251,6 @@
                     </span>
                   </div>
 
-                  {/* أزرار التحكم واليوزر */}
                   <div className="flex items-center gap-3">
                     <button 
                       onClick={() => {
@@ -309,7 +308,6 @@
             <main className="pt-24 pb-12 max-w-7xl mx-auto px-6 lg:px-8">
               {currentView === 'shop' && (
                 <div>
-                  {/* واجهة الهيرو الترحيبية */}
                   <section className="relative w-full py-16 text-center md:text-start flex flex-col items-center md:items-start justify-center">
                     <div className="inline-flex items-center gap-2 px-4 py-2 rounded-full border border-[#2d3a2e]/15 bg-white/60 backdrop-blur-sm mb-6">
                       <span className="text-xs font-bold text-[#2d3a2e]">
@@ -320,7 +318,6 @@
                       {lang === 'ar' ? 'المتجر الأول لبيع المعدات والأجهزة مع خدمة التوصيل والشات المباشر' : 'The ultimate store for equipment with delivery & direct chat'}
                     </h1>
                     
-                    {/* زر الانتقال السريع للمبيعات */}
                     <button
                       onClick={scrollToSales}
                       className="inline-flex items-center gap-2 px-6 py-3 bg-[#2d3a2e] text-white text-sm font-bold rounded-full hover:bg-[#3d5a3e] transition-colors shadow-sm"
@@ -329,7 +326,6 @@
                     </button>
                   </section>
 
-                  {/* قسم عرض المنتجات والمبيعات */}
                   <div id="sales-section" className="mt-12 pt-8 border-t border-[#2d3a2e]/10">
                     <h2 className="text-2xl font-bold text-[#2d3a2e] mb-6">
                       {lang === 'ar' ? 'المعدات والمعروضات المتاحة للبيع' : 'Available Equipment & Sales'}
@@ -354,7 +350,6 @@
               )}
             </main>
 
-            {/* نافذة تفاصيل المنتج */}
             {selectedProduct && (
               <ProductModal 
                 product={selectedProduct} 
